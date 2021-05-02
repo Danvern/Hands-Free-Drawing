@@ -17,3 +17,9 @@ get (change|changes):
 get staged (change|changes):
     "git diff --staged"
     key(enter)
+get log:
+    "git log"
+    key(enter)
+get patch log:
+    "git log -p"
+    key(enter)

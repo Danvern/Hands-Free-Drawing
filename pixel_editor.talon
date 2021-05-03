@@ -14,6 +14,8 @@ pixel pose (mouth|mouse|cursor):
     user.editor_adjust_position_cursor()
 cart <user.letter> <number>:
     user.jump_to_grid(letter, number)
+pixel grid switch <number>:
+    user.change_grid(number)
 pixel dump grid data:
     user.dump_grid_data()
 
@@ -22,13 +24,13 @@ pixel dump grid data:
 # set up git - COMPLETE
     
 # implement smooth grid positioning/resizing
-# implement independent width and height
+# implement independent width and height - COMPLETE
 # implement preset grids for time line and palette
 # separate grid class - COMPLETE
 # labels for positions on a grid
-# ability to save per program presets for grid locations
-# multiple grids that can be switch between
-# preset cell sizes
+# ability to save per program presets for grid locations by exporting a command to clip board
+# multiple grids that can be switch between - COMPLETE
+# preset cell sizes for zoom levels
 # ability to offset the first row/column of a grid
 
 # quick mode - say coordinates or directions without any prefix to move - command to turn on and off

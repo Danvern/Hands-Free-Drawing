@@ -9,7 +9,8 @@ class PixelEditor:
         self.canvas = None
         screen = ui.screens()[0]
         self.max_rect = screen.rect.copy()
-        self.grids = [self.FlexibleGrid(width, height, self.max_rect)]
+        self.grids = []
+        # self.grids = [self.FlexibleGrid(width, height, self.max_rect)]
         self.active_grid = 0
 
     def enable(self):
@@ -35,19 +36,33 @@ class PixelEditor:
             self.enable()
             
     class FlexibleGrid:
-        def __init__(self, width: float, height: float, maximum_bounds: Rect):
-            self.bounding_rect =  Rect(0, 0, width, height)
-            self.cell_size = 10
+        def __init__(self, x: int, y: int, width: float, height: float, maximum_bounds: Rect, /, cell_width = 10, cell_height = 10):
+            self.bounding_rect =  Rect(x, y, width, height)
+            self.cell_width = cell_width
+            self.cell_height = cell_height
             self.max_rect = maximum_bounds
             screen = ui.screens()[0]
             if self.max_rect is None:
                 self.max_rect = screen.rect.copy()
         
+        """Set the height and width of each grid cell to the specified value"""
         def set_grid_spacing(self, spacing: int):
-            self.cell_size = spacing if spacing > 0 else 1 
+            spacing = spacing if spacing > 0 else 1 
+            self.cell_width = spacing
+            self.cell_height = spacing
+
+        """Set the height and width of each grid cell independently to the specified values"""
+        def set_grid_spacing_2d(self, width: int, height: int):
+            self.cell_width = width if width > 0 else 1
+            self.cell_height = height if height > 0 else 1
                 
+        """Adjust the height and width of the grid relative to the width, making it square"""
         def adjust_grid_spacing(self, spacing_adjust: int):
-            self.set_grid_spacing(self.cell_size + spacing_adjust)
+            self.set_grid_spacing(self.cell_width + spacing_adjust)
+
+        """Adjust the height and width of the grid independently by the specified values"""
+        def adjust_grid_spacing_2(self, spacing_adjust_x: int, spacing_adjust_y: int):
+            self.set_grid_spacing(self.cell_width + spacing_adjust_x, self.cell_height + spacing_adjust_y)
                 
         def set_grid_size(self, x: int, y: int):
             if(x > self.max_rect.width):
@@ -94,29 +109,32 @@ class PixelEditor:
             x = x * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.x
             y = y * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.y
             return x, y
-        
+
+        """Draw the graphical representation of the grid"""        
         def draw_canvas(self, canvas):
             paint = canvas.paint
-            paint.color = '0000001f'
+            paint.color = '000055ff'
             rect = self.bounding_rect
 
             i_range = lambda start, stop, step: range(int(start), int(stop), int(step))
             paint.antialias = False
-            # adan of that value sod the left the line renders
+            # to make sure the left line renders (probably not necessary)
             offset = 1
-            for x in i_range(rect.left + offset, rect.right, self.cell_size):
+            for x in i_range(rect.left + offset, rect.right, self.cell_width):
                 canvas.draw_line(x, rect.top, x, rect.bot)
-            for y in i_range(rect.top, rect.bot, self.cell_size):
+            for y in i_range(rect.top, rect.bot, self.cell_height):
                 canvas.draw_line(rect.left, y, rect.right, y)        
-        
+
+        """Return a string of structural information"""        
         def get_info(self) -> str:
             r = self.bounding_rect
-            return f"X: {r.x}, Y: {r.y}, Width: {r.width}, Height: {r.height}, Cell Size: {self.cell_size}"
+            return f"X: {r.x}, Y: {r.y}, Width: {r.width}, Height: {r.height}, Cell Width: {self.cell_width}, Cell Height: {self.cell_height}"
         
 
-    # draw the currently active grid
+    """Draw the currently active grid"""
     def draw_canvas(self, canvas):
-        self.grids[self.active_grid].draw_canvas(canvas)
+        if len(self.grids) > 0:
+            self.grids[self.active_grid].draw_canvas(canvas)
     
     # adjust the cell size of the specified grid in both directions equally
     def set_grid_spacing(self, spacing: int, identifier = 0):
@@ -137,6 +155,20 @@ class PixelEditor:
     def adjust_grid_position_to_mouse(self, identifier = 0):
         self.grids[identifier].adjust_grid_position_to_mouse()
         self.canvas.freeze()
+        
+    """Add a new grid with the specified attributes"""
+    def add_grid(self, x: int, y: int, width: float, height: float, /, cell_width = 10, cell_height = 10):
+        self.grids.append(self.FlexibleGrid(x, y, width, height, self.max_rect, cell_width, cell_height))
+
+    """Delete every loaded grid"""
+    def clear_grids(self):
+        self.grids = []
+        self.canvas.freeze()
+        
+    """Switch to the specified number grid"""
+    def set_active_grid(self, grid = 0):
+        self.active_grid = grid if (grid > 0 and grid < len(self.grids)) else 0
+        self.canvas.freeze()
 
     """Print out the values of contained grids"""
     def dump_data(self):
@@ -148,6 +180,8 @@ class PixelEditor:
             
 pixel_editor = PixelEditor(500, 500)
 pixel_editor.enable()
+pixel_editor.add_grid(300, 300, 500, 400, 30, 20)
+pixel_editor.add_grid(600, 300, 500, 400, 50, 50)
 
 modo = Module()
 modo.list('directional', desc='directions for expansion')
@@ -190,7 +224,7 @@ class Actions:
     def editor_adjust_position_2d(number: int, direction: str, number2: int, direction2: str):
         '''move the grid overlay'''
         x, y = interpret_direction(number, direction)
-        x2, y2 = interpret_direction(number2, direction2)
+        x2, y2 = interpret_direction(number2, direction2)  
         pixel_editor.adjust_grid_position(x + x2, y + y2)
         
     def editor_adjust_size(number: int, direction: str):
@@ -211,6 +245,18 @@ class Actions:
     def editor_adjust_position_cursor():
         '''moved to cursor'''
         pixel_editor.adjust_grid_position_to_mouse()
+
+    def add_grid(x: int, y: int, width: float, height: float, cell_width: int, cell_height: int):
+        """Add a new grid with the specified values"""
+        pixel_editor.add_grid(x, y, width, height, cell_width, cell_height)
+
+    def clear_grids():
+        """Delete every loaded grid"""
+        pixel_editor.clear_grids()
+
+    def change_grid(number: int):
+        """Change to the specified grid number"""
+        pixel_editor.set_active_grid(number)
         
     def dump_grid_data():
         """Print out the values of contained grids"""

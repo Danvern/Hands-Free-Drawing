@@ -46,6 +46,9 @@ class PixelEditor:
         def set_grid_spacing(self, spacing: int):
             self.cell_size = spacing if spacing > 0 else 1 
                 
+        def adjust_grid_spacing(self, spacing_adjust: int):
+            self.set_grid_spacing(self.cell_size + spacing_adjust)
+                
         def set_grid_size(self, x: int, y: int):
             if(x > self.max_rect.width):
                 self.bounding_rect.width = self.max_rect.width
@@ -105,6 +108,11 @@ class PixelEditor:
                 canvas.draw_line(x, rect.top, x, rect.bot)
             for y in i_range(rect.top, rect.bot, self.cell_size):
                 canvas.draw_line(rect.left, y, rect.right, y)        
+        
+        def get_info(self) -> str:
+            r = self.bounding_rect
+            return f"X: {r.x}, Y: {r.y}, Width: {r.width}, Height: {r.height}, Cell Size: {self.cell_size}"
+        
 
     # draw the currently active grid
     def draw_canvas(self, canvas):
@@ -129,6 +137,14 @@ class PixelEditor:
     def adjust_grid_position_to_mouse(self, identifier = 0):
         self.grids[identifier].adjust_grid_position_to_mouse()
         self.canvas.freeze()
+
+    """Print out the values of contained grids"""
+    def dump_data(self):
+        number = 0
+        for grid in self.grids:
+            print(f"Grid {number}: ({grid.get_info()})")
+            number += 1
+    
             
 pixel_editor = PixelEditor(500, 500)
 pixel_editor.enable()
@@ -195,6 +211,10 @@ class Actions:
     def editor_adjust_position_cursor():
         '''moved to cursor'''
         pixel_editor.adjust_grid_position_to_mouse()
+        
+    def dump_grid_data():
+        """Print out the values of contained grids"""
+        pixel_editor.dump_data()
 
 ctx = Context()
 ctx.lists['user.directional'] = [

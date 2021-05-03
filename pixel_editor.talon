@@ -14,6 +14,8 @@ pixel pose (mouth|mouse|cursor):
     user.editor_adjust_position_cursor()
 cart <user.letter> <number>:
     user.jump_to_grid(letter, number)
+pixel dump grid data:
+    user.dump_grid_data()
 
 # TODO
 
@@ -26,6 +28,7 @@ cart <user.letter> <number>:
 # labels for positions on a grid
 # ability to save per program presets for grid locations
 # multiple grids that can be switch between
+# preset cell sizes
 # ability to offset the first row/column of a grid
 
 # quick mode - say coordinates or directions without any prefix to move - command to turn on and off

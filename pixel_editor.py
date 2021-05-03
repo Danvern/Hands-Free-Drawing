@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from talon import Context, Module, canvas, cron, ctrl, screen, ui
+from talon import Context, Module, canvas, cron, ctrl, screen, ui, clip
 from talon.skia import Shader, Color, Paint, Rect
 
 class PixelEditor:
@@ -129,7 +129,11 @@ class PixelEditor:
         def get_info(self) -> str:
             r = self.bounding_rect
             return f"X: {r.x}, Y: {r.y}, Width: {r.width}, Height: {r.height}, Cell Width: {self.cell_width}, Cell Height: {self.cell_height}"
-        
+            
+        """Return a command formatted as a string to generate this grid."""
+        def get_preset(self) -> str:
+            r = self.bounding_rect
+            return f"add_grid({r.x}, {r.y}, {r.width}, {r.height}, {self.cell_width}, {self.cell_height})"
 
     """Draw the currently active grid"""
     def draw_canvas(self, canvas):
@@ -177,11 +181,19 @@ class PixelEditor:
             print(f"Grid {number}: ({grid.get_info()})")
             number += 1
     
+    """Copy commands to clipboard to generate the current grid layout"""
+    def copy_preset(self):
+        command = ""
+        for grid in self.grids:
+            command = command + grid.get_preset() + "\n"
+        clip.set_text(command)
+        
             
 pixel_editor = PixelEditor(500, 500)
 pixel_editor.enable()
 pixel_editor.add_grid(300, 300, 500, 400, 30, 20)
 pixel_editor.add_grid(600, 300, 500, 400, 50, 50)
+pixel_editor.copy_preset()
 
 modo = Module()
 modo.list('directional', desc='directions for expansion')

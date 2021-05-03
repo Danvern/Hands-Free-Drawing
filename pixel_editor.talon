@@ -28,7 +28,7 @@ pixel dump grid data:
 # implement preset grids for time line and palette
 # separate grid class - COMPLETE
 # labels for positions on a grid
-# ability to save per program presets for grid locations by exporting a command to clip board
+# ability to save per program presets for grid locations by exporting a command to clip board - COMPLETE
 # multiple grids that can be switch between - COMPLETE
 # preset cell sizes for zoom levels
 # ability to offset the first row/column of a grid

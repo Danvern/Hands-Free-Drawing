@@ -99,7 +99,7 @@ class PixelEditor:
             self.set_grid_position(self.bounding_rect.x + x_adjust, self.bounding_rect.y + y_adjust)
 
         def adjust_grid_position_to_mouse(self):
-            self.set_grid_position(ctrl.mouse_pos())
+            self.set_grid_position(*ctrl.mouse_pos())
 
         def cell_coordinate(self, character: str, number: int) -> Tuple[int, int]:
             x = number

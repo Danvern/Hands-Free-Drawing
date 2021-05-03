@@ -17,12 +17,12 @@ cart <user.letter> <number>:
 
 # TODO
 
-# set up git
+# set up git - COMPLETE
     
 # implement smooth grid positioning/resizing
 # implement independent width and height
 # implement preset grids for time line and palette
-# separate grid class
+# separate grid class - COMPLETE
 # labels for positions on a grid
 # ability to save per program presets for grid locations
 # multiple grids that can be switch between

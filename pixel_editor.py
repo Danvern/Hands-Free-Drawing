@@ -12,6 +12,7 @@ class PixelEditor:
         self.grids = []
         # self.grids = [self.FlexibleGrid(width, height, self.max_rect)]
         self.active_grid = 0
+        self.grid_opacity = 0.05
 
     def enable(self):
         if self.enabled:
@@ -129,9 +130,10 @@ class PixelEditor:
             return x, y
 
         """Draw the graphical representation of the grid."""        
-        def draw_canvas(self, canvas):
+        def draw_canvas(self, canvas, opacity):
             paint = canvas.paint
-            paint.color = '000055ff'
+            paint.color = Color(0 + 0 + (35 * 256) + 255 * opacity)
+            # paint.color = '000055ff'
             rect = self.bounding_rect
 
             i_range = lambda start, stop, step: range(int(start), int(stop), int(step))
@@ -156,7 +158,7 @@ class PixelEditor:
     """Draw the currently active grid."""
     def draw_canvas(self, canvas):
         if len(self.grids) > 0:
-            self.grids[self.active_grid].draw_canvas(canvas)
+            self.grids[self.active_grid].draw_canvas(canvas, self.grid_opacity)
     
     """Set the cell size of the specified grid in both directions equally."""
     def set_grid_spacing(self, spacing: int, identifier = None):
@@ -242,6 +244,11 @@ class PixelEditor:
         for grid in self.grids:
             command = command + grid.get_preset() + "\n"
         clip.set_text(command)
+        
+    """Set the opacity of the interface to the given value in percent form."""
+    def set_opacity(self, opacity: int):
+        self.opacity = max(min(opacity, 100), 0) / 100.0
+        
         
             
 pixel_editor = PixelEditor(500, 500)
@@ -351,6 +358,10 @@ class Actions:
     def copy_grid_data():
         """Copy the settings of the loaded grids."""
         pixel_editor.copy_preset()
+        
+    def editor_set_opacity(percent: int):
+        """Set the opacity of the interface to the given value in percent form."""
+        pixel_editor.set_opacity(percent)
 
 ctx = Context()
 ctx.lists['user.directional'] = [

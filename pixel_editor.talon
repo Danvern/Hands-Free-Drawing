@@ -41,11 +41,14 @@ pixel load default:
 
 
 # NAVIGATION #
-cart <user.letter> <number>:
-    user.jump_to_grid(letter, number)
+#FIX THIS
+#cart <user.letter> <number>:
+#    user.jump_to_grid(letter, number)
 pixel grid switch <number>:
     user.change_grid(number)
-    
+# or  fix this - does not seem to update render even though value is changing
+pixel grid opacity <number>:
+    user.editor_set_opacity(number)
     
 # TODO
 

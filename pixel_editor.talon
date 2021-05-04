@@ -33,6 +33,13 @@ pixel dump grid data:
 pixel copy grid data:
     user.copy_grid_data()
 
+pixel load default:
+    user.clear_grids()
+    user.add_grid(166, 98, 1706, 632, 8, 8)
+    user.add_grid(8, 99, 132, 635, 12, 12)
+    user.add_grid(161, 768, 1725, 230, 23, 23)
+
+
 # NAVIGATION #
 cart <user.letter> <number>:
     user.jump_to_grid(letter, number)
@@ -46,9 +53,9 @@ pixel grid switch <number>:
     
 # implement smooth grid positioning/resizing - COMPLETE
 # implement independent width and height - COMPLETE
-# implement preset grids for time line and palette
+# implement preset grids for time line and palette - COMPLETE
 # separate grid class - COMPLETE
-# labels for positions on a grid
+# labels for positions on a grid - CLOSED
 # ability to save per program presets for grid locations by exporting a command to clip board - COMPLETE
 # multiple grids that can be switch between - COMPLETE
 # preset cell sizes for zoom levels

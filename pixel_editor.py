@@ -151,7 +151,7 @@ class PixelEditor:
         """Return a command formatted as a string to generate this grid."""
         def get_preset(self) -> str:
             r = self.bounding_rect
-            return f"add_grid({r.x}, {r.y}, {r.width}, {r.height}, {self.cell_width}, {self.cell_height})"
+            return f"user.add_grid({r.x}, {r.y}, {r.width}, {r.height}, {self.cell_width}, {self.cell_height})"
 
     """Draw the currently active grid."""
     def draw_canvas(self, canvas):
@@ -159,43 +159,59 @@ class PixelEditor:
             self.grids[self.active_grid].draw_canvas(canvas)
     
     """Set the cell size of the specified grid in both directions equally."""
-    def set_grid_spacing(self, spacing: int, identifier = 0):
+    def set_grid_spacing(self, spacing: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         self.grids[identifier].set_grid_spacing(spacing)
         self.canvas.freeze()
             
     """Set the cell size of the specified grid in both directions equally."""
-    def set_grid_spacing_2d(self, spacing_x: int, spacing_y: int, identifier = 0):
+    def set_grid_spacing_2d(self, spacing_x: int, spacing_y: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         self.grids[identifier].set_grid_spacing_2d(spacing_x, spacing_y)
         self.canvas.freeze()
             
     """Adjust the cell size of the specified grid in both directions equally."""
-    def adjust_grid_spacing(self, spacing: int, identifier = 0):
+    def adjust_grid_spacing(self, spacing: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         self.grids[identifier].adjust_grid_spacing(spacing)
         self.canvas.freeze()
             
     """Adjust the cell size of the specified grid in both directions equally."""
-    def adjust_grid_spacing_2d(self, spacing_x: int, spacing_y: int, identifier = 0):
+    def adjust_grid_spacing_2d(self, spacing_x: int, spacing_y: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         self.grids[identifier].adjust_grid_spacing_2d(spacing_x, spacing_y)
         self.canvas.freeze()
             
     """Adjust the size of the specified grid by the provided amounts."""
-    def adjust_grid_size(self, width_adjust: int, height_adjust: int, identifier = 0):
+    def adjust_grid_size(self, width_adjust: int, height_adjust: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         #print(f"X: {width_adjust}, Y: {height_adjust}")
         self.grids[identifier].adjust_grid_size(width_adjust, height_adjust)
         self.canvas.freeze()
 
     """Resize the specified grid to the mouse cursor."""
-    def adjust_grid_size_to_cursor(self, identifier = 0):
+    def adjust_grid_size_to_cursor(self, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         self.grids[identifier].adjust_grid_size_to_mouse()
         self.canvas.freeze()
         
     """Adjust the specified grid by the specified amounts.""" 
-    def adjust_grid_position(self, x_adjust: int, y_adjust: int, identifier = 0):
+    def adjust_grid_position(self, x_adjust: int, y_adjust: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         self.grids[identifier].adjust_grid_position(x_adjust, y_adjust)
         self.canvas.freeze()
 
     """Move the specified grid to the mouse cursor."""
-    def adjust_grid_position_to_mouse(self, identifier = 0):
+    def adjust_grid_position_to_mouse(self, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
         self.grids[identifier].adjust_grid_position_to_mouse()
         self.canvas.freeze()
         
@@ -230,9 +246,9 @@ class PixelEditor:
             
 pixel_editor = PixelEditor(500, 500)
 pixel_editor.enable()
-pixel_editor.add_grid(300, 300, 500, 400, 30, 20) 
-pixel_editor.add_grid(600, 300, 500, 400, 50, 50)
-pixel_editor.add_grid(300, 200, 300, 400, 30, 30)
+pixel_editor.add_grid(166, 98, 1706, 632, 8, 8)
+pixel_editor.add_grid(8, 99, 132, 635, 12, 12)
+pixel_editor.add_grid(161, 768, 1725, 230, 23, 23)
 
 modo = Module()
 modo.list('directional', desc='directions for expansion')

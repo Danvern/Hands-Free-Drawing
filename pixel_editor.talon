@@ -1,29 +1,50 @@
 pixel editor:
     user.pixel_editor_toggle()
-pixel (sell|cell|so) <number>:
-    user.editor_adjust_spacing(number)
+    
+# SET UP FUNCTIONS #
+pixel (sell|cell|so) <number> square:
+    user.editor_set_spacing(number)
+pixel (sell|cell|so) <number> (by|buy) <number>:
+    user.editor_set_spacing_2d(number_1, number_2)
+pixel (sell|cell|so) <number> {user.directional} square:
+    user.editor_adjust_spacing(number, directional)
+# TODO - make an actual method for this
+pixel (sell|cell|so) <number> {user.directional}:
+    user.editor_adjust_spacing_2d(number, directional, 0, "up")
+pixel (sell|cell|so) <number> {user.directional} (by|buy) <number> {user.directional}:
+    user.editor_adjust_spacing_2d(number_1, directional_1, number_2, directional_2)
+    
 pixel size <number> {user.directional}:
     user.editor_adjust_size(number_1, directional_1)
 pixel size <number> {user.directional} <number> {user.directional}:
     user.editor_adjust_size_2d(number_1, directional_1, number_2, directional_2)
+pixel size (mouth|mouse|cursor):
+    user.editor_adjust_size_cursor()    
+
 pixel pose <number> {user.directional}:
     user.editor_adjust_position(number_1, directional_1)
 pixel pose <number> {user.directional} <number> {user.directional}:
     user.editor_adjust_position_2d(number_1, directional_1, number_2, directional_2)
 pixel pose (mouth|mouse|cursor):
     user.editor_adjust_position_cursor()
+    
+pixel dump grid data:
+    user.dump_grid_data()
+pixel copy grid data:
+    user.copy_grid_data()
+
+# NAVIGATION #
 cart <user.letter> <number>:
     user.jump_to_grid(letter, number)
 pixel grid switch <number>:
     user.change_grid(number)
-pixel dump grid data:
-    user.dump_grid_data()
-
+    
+    
 # TODO
 
 # set up git - COMPLETE
     
-# implement smooth grid positioning/resizing
+# implement smooth grid positioning/resizing - COMPLETE
 # implement independent width and height - COMPLETE
 # implement preset grids for time line and palette
 # separate grid class - COMPLETE

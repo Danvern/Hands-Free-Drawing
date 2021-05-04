@@ -41,9 +41,12 @@ pixel load default:
 
 
 # NAVIGATION #
-#FIX THIS
-#cart <user.letter> <number>:
-#    user.jump_to_grid(letter, number)
+cart <user.letter> <number>:
+    user.jump_to_grid(letter, number)
+slide <number> {user.directional}:
+    user.move_on_grid(number_1, directional_1)
+slide <number> {user.directional} <number> {user.directional}:
+    user.move_on_grid_2d(number_1, directional_1, number_2, directional_2)
 pixel grid switch <number>:
     user.change_grid(number)
 # or  fix this - does not seem to update render even though value is changing
@@ -64,6 +67,8 @@ pixel grid opacity <number>:
 # preset cell sizes for zoom levels
 # ability to offset the first row/column of a grid
 
+# jump to position on grid - COMPLETE
+# move by grid cells - COMPLETE
 # quick mode - say coordinates or directions without any prefix to move - command to turn on and off
 # HSV adjustment that can read in values
 # RGB adjustment that can read in valuesp

@@ -1,3 +1,4 @@
+import math
 from typing import Tuple
 
 from talon import Context, Module, canvas, cron, ctrl, screen, ui, clip
@@ -45,6 +46,15 @@ class PixelEditor:
             screen = ui.screens()[0]
             if self.max_rect is None:
                 self.max_rect = screen.rect.copy()
+            self.last_cell = (0, 0)
+        
+        """Return how many cells wide this grid is."""
+        def get_cells_wide(self) -> int:
+            return round(self.bounding_rect.width / self.cell_width)
+        
+        """Return how many cells tall this grid is."""
+        def get_cells_tall(self) -> int:
+            return round(self.bounding_rect.height / self.cell_height)
         
         """Set the height and width of each grid cell to the specified value."""
         def set_grid_spacing(self, spacing: int):
@@ -118,15 +128,28 @@ class PixelEditor:
         """Set the upper left corner of the grid to the mouse cursor position."""
         def adjust_grid_position_to_mouse(self):
             self.set_grid_position(*ctrl.mouse_pos())
-            
-        """Return integer coordinates from a character - integer combination."""
-        def cell_coordinate(self, character: str, number: int) -> Tuple[int, int]:
-            x = number
-            # turn the character into a number, 97 is 'a'
-            y = ord(character.lower()) - 97
+
+        """Return whether the specified screen position is out of bounds of the grid."""
+        def is_out_of_bounds(self, x: int, y: int) -> bool:
+            x, y = self.screen_to_cell(x, y)
+            if x < 0 or x >= self.get_cells_wide():
+                return True
+            if y < 0 or y >= self.get_cells_tall():
+                return True
+            return False
+        
+        """Return the cell coordinates of the specified screen position."""
+        def screen_to_cell(self, x: int, y: int) -> Tuple[int, int]:
+            # subtract grid position and divide by cell dimension ignoring remainder
+            x = math.floor((x - self.bounding_rect.x) / self.cell_width)
+            y = math.floor((y - self.bounding_rect.y) / self.cell_height)
+            return x, y
+        
+        """Return the screen coordinates of the specified cell."""
+        def cell_to_screen(self, x: int, y: int) -> Tuple[int, int]:
             # multiply by cell size and add half as an offset
-            x = x * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.x
-            y = y * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.y
+            x = x * self.cell_width + self.cell_width * 0.5 + self.bounding_rect.x
+            y = y * self.cell_height + self.cell_height * 0.5 + self.bounding_rect.y
             return x, y
 
         """Draw the graphical representation of the grid."""        
@@ -159,6 +182,45 @@ class PixelEditor:
     def draw_canvas(self, canvas):
         if len(self.grids) > 0:
             self.grids[self.active_grid].draw_canvas(canvas, self.grid_opacity)
+
+    """Return clamped grid cell coordinate from potentially out of bounds one."""
+    def clamp_cell_coordinate(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
+        if identifier is None:
+            identifier = self.active_grid
+        x = min(max(0, x), self.grids[identifier].get_cells_wide())
+        y = min(max(0, y), self.grids[identifier].get_cells_tall())
+        return x, y
+
+    """Return clamped grid cell coordinates of the specified screen position."""
+    def screen_to_cell(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
+        if identifier is None:
+            identifier = self.active_grid
+        if self.grids[identifier].is_out_of_bounds(x, y):
+            # print(f"{x}, {y} is out of bounds")
+            return self.grids[identifier].last_cell
+        else:
+            return self.grids[identifier].screen_to_cell(x, y)
+
+    """Return screen coordinates of the specified grid cell."""
+    def cell_to_screen(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
+        if identifier is None:
+            identifier = self.active_grid
+        x, y = self.clamp_cell_coordinate(x, y, identifier)
+        return self.grids[identifier].cell_to_screen(x, y)
+        
+    """Return coordinates adjusted by the specified number of grid cells."""
+    def get_cell_adjusted(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
+        if identifier is None:
+            identifier = self.active_grid
+        last_x, last_y = self.screen_to_cell(*ctrl.mouse_pos(), identifier)
+        return self.clamp_cell_coordinate(last_x + x, last_y + y, identifier)
+
+    """Move the mouse cursor to the specified grid cell."""
+    def move_cursor_to_cell(self, x: int, y: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
+        self.grids[identifier].last_cell = x, y
+        ctrl.mouse_move(*self.cell_to_screen(x, y, identifier))
     
     """Set the cell size of the specified grid in both directions equally."""
     def set_grid_spacing(self, spacing: int, identifier = None):
@@ -248,6 +310,11 @@ class PixelEditor:
     """Set the opacity of the interface to the given value in percent form."""
     def set_opacity(self, opacity: int):
         self.opacity = max(min(opacity, 100), 0) / 100.0
+            
+
+        x = x * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.x
+        y = y * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.y
+        return x, y
         
         
             
@@ -260,6 +327,14 @@ pixel_editor.add_grid(161, 768, 1725, 230, 23, 23)
 modo = Module()
 modo.list('directional', desc='directions for expansion')
 
+"""Return integer coordinates from a character - integer combination."""
+def interpret_coordinate(character: str, number: int) -> Tuple[int, int]:
+    x = number
+    # turn the character into a number, 97 is 'a'
+    y = ord(character.lower()) - 97
+    return x, y
+    
+"""Return integer vector from directional integer - string combination."""
 def interpret_direction(distance: int, direction: str) -> Tuple[int, int]:
     if direction == 'left':
         return -distance, 0
@@ -287,8 +362,22 @@ class Actions:
 
     def jump_to_grid(character: str, number: int):
         """Move the cursor to the indicated position."""
-        x, y = pixel_editor.cell_coordinate(character, number)
-        ctrl.mouse_move(x, y)
+        x, y = interpret_coordinate(character, number)
+        x, y = pixel_editor.clamp_cell_coordinate(x, y)
+        pixel_editor.move_cursor_to_cell(x, y)
+        
+    def move_on_grid(number: int, direction: str):
+        """Move the cursor by the indicated amount of cells."""
+        x, y = interpret_direction(number, direction)
+        x, y = pixel_editor.get_cell_adjusted(x, y)
+        pixel_editor.move_cursor_to_cell(x, y)
+    
+    def move_on_grid_2d(number: int, direction: str, number2: int, direction2: str):
+        """Move the cursor by the indicated amount of cells."""
+        x, y = interpret_direction(number, direction)
+        x2, y2 = interpret_direction(number2, direction2)
+        x, y = pixel_editor.get_cell_adjusted(x + x2, y + y2)
+        pixel_editor.move_cursor_to_cell(x, y)
     
     def editor_adjust_position(number: int, direction: str):
         """Move the grid overlay by the specified amount."""

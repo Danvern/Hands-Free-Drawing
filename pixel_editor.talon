@@ -43,12 +43,20 @@ pixel load default:
 # NAVIGATION #
 cart <user.letter> <number>:
     user.jump_to_grid(letter, number)
+slide {user.directional}:
+    user.move_on_grid(1, directional_1)
 slide <number> {user.directional}:
     user.move_on_grid(number_1, directional_1)
+slide {user.directional} {user.directional}:
+    user.move_on_grid_2d(1, directional_1, 1, directional_2)
+slide <number> {user.directional} {user.directional}:
+    user.move_on_grid_2d(number, directional_1, number, directional_2)
 slide <number> {user.directional} <number> {user.directional}:
     user.move_on_grid_2d(number_1, directional_1, number_2, directional_2)
 pixel grid switch <number>:
     user.change_grid(number)
+    # go to last stored position
+    user.move_on_grid(0, "down")
 # or  fix this - does not seem to update render even though value is changing
 pixel grid opacity <number>:
     user.editor_set_opacity(number)

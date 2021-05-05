@@ -61,6 +61,7 @@ pixel grid switch <number>:
 pixel grid opacity <number>:
     user.editor_set_opacity(number)
     
+
 # TODO
 
 # set up git - COMPLETE

@@ -1,7 +1,7 @@
 import math
 from typing import Tuple
 
-from talon import Context, Module, canvas, cron, ctrl, screen, ui, clip
+from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip
 from talon.skia import Shader, Color, Paint, Rect
 
 class PixelEditor:
@@ -451,6 +451,10 @@ class Actions:
     def editor_set_opacity(percent: int):
         """Set the opacity of the interface to the given value in percent form."""
         pixel_editor.set_opacity(percent)
+        
+    def scroll_amount(number: int):
+        """Scroll the mouse wheel by the specified amount."""
+        actions.mouse_scroll(number)
 
 ctx = Context()
 ctx.lists['user.directional'] = [

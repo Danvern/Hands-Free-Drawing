@@ -8,7 +8,6 @@ pixel (sell|cell|so) <number> (by|buy) <number>:
     user.editor_set_spacing_2d(number_1, number_2)
 pixel (sell|cell|so) <number> {user.directional} square:
     user.editor_adjust_spacing(number, directional)
-# TODO - make an actual method for this
 pixel (sell|cell|so) <number> {user.directional}:
     user.editor_adjust_spacing_2d(number, directional, 0, "up")
 pixel (sell|cell|so) <number> {user.directional} (by|buy) <number> {user.directional}:
@@ -27,6 +26,13 @@ pixel pose <number> {user.directional} <number> {user.directional}:
     user.editor_adjust_position_2d(number_1, directional_1, number_2, directional_2)
 pixel pose (mouth|mouse|cursor):
     user.editor_adjust_position_cursor()
+    
+pixel (off|offset) (russet|reset):
+    user.editor_set_grid_offset(0, 0)
+pixel (off|offset) <number> {user.directional}:
+    user.editor_adjust_grid_offset(number_1, directional_1, 0, "up")
+pixel (off|offset) <number> {user.directional} <number> {user.directional}:
+    user.editor_adjust_grid_offset(number_1, directional_1, number_2, directional_2)
     
 pixel dump grid data:
     user.dump_grid_data()
@@ -74,18 +80,19 @@ pixel grid opacity <number>:
 # ability to save per program presets for grid locations by exporting a command to clip board - COMPLETE
 # multiple grids that can be switch between - COMPLETE
 # preset cell sizes for zoom levels
-# ability to offset the first row/column of a grid
+# ability to offset the first row/column of a grid - COMPLETE
 
 # jump to position on grid - COMPLETE
 # move by grid cells - COMPLETE
 # quick mode - say coordinates or directions without any prefix to move - command to turn on and off
 # HSV adjustment that can read in values - COMPLETE (room for improvement in precision)
 # RGB adjustment that can read in values - CLOSED
-# tool commands  
+# tool commands - COMPLETE
 # dragging commands
-# translation modes - how the cursor moves from point a to point b (movement patterns)
 # stroke mode - whether to draw or just move
 
+# translation modes - how the cursor moves from point a to point b (movement patterns via vector like data for custom rotations of shapes/brushes)
+# anti-alliasing script / edge patterning 
 # custom grid format for uneven grids
 # automatic offset
 # hexagonal grid

@@ -47,6 +47,8 @@ class PixelEditor:
             if self.max_rect is None:
                 self.max_rect = screen.rect.copy()
             self.last_cell = (0, 0)
+            self.offset_x = 0
+            self.offset_y = 0
         
         """Return how many cells wide this grid is."""
         def get_cells_wide(self) -> int:
@@ -129,6 +131,17 @@ class PixelEditor:
         def adjust_grid_position_to_mouse(self):
             self.set_grid_position(*ctrl.mouse_pos())
 
+        """Set the offset of the grid to the specified amount."""
+        def set_offset(self, x: int, y: int):
+            self.offset_x = min(max(0, x), self.cell_width / 2)
+            self.offset_y = min(max(0, y), self.cell_height / 2)
+        
+        """Adjust the offset of the grid by the specified amount."""
+        def adjust_offset(self, x: int, y: int):
+            remainder_x = (x + self.offset_x) % (self.cell_width / 2)
+            remainder_y = (y + self.offset_y) % (self.cell_height / 2)
+            self.set_offset(remainder_x, remainder_y)
+
         """Return whether the specified screen position is out of bounds of the grid."""
         def is_out_of_bounds(self, x: int, y: int) -> bool:
             x, y = self.screen_to_cell(x, y)
@@ -141,15 +154,15 @@ class PixelEditor:
         """Return the cell coordinates of the specified screen position."""
         def screen_to_cell(self, x: int, y: int) -> Tuple[int, int]:
             # subtract grid position and divide by cell dimension ignoring remainder
-            x = math.floor((x - self.bounding_rect.x) / self.cell_width)
-            y = math.floor((y - self.bounding_rect.y) / self.cell_height)
+            x = math.floor((x - self.bounding_rect.x - self.offset_x) / self.cell_width)
+            y = math.floor((y - self.bounding_rect.y - self.offset_y) / self.cell_height)
             return x, y
         
         """Return the screen coordinates of the specified cell."""
         def cell_to_screen(self, x: int, y: int) -> Tuple[int, int]:
             # multiply by cell size and add half as an offset
-            x = x * self.cell_width + self.cell_width * 0.5 + self.bounding_rect.x
-            y = y * self.cell_height + self.cell_height * 0.5 + self.bounding_rect.y
+            x = x * self.cell_width + self.cell_width * 0.5 + self.bounding_rect.x + self.offset_x
+            y = y * self.cell_height + self.cell_height * 0.5 + self.bounding_rect.y + self.offset_y
             return x, y
 
         """Draw the graphical representation of the grid."""        
@@ -162,10 +175,10 @@ class PixelEditor:
             i_range = lambda start, stop, step: range(int(start), int(stop), int(step))
             paint.antialias = False
             # to make sure the left line renders (probably not necessary)
-            offset = 1
-            for x in i_range(rect.left + offset, rect.right, self.cell_width):
+            base_offset = 1
+            for x in i_range(rect.left + base_offset + self.offset_x, rect.right, self.cell_width):
                 canvas.draw_line(x, rect.top, x, rect.bot)
-            for y in i_range(rect.top, rect.bot, self.cell_height):
+            for y in i_range(rect.top + self.offset_y, rect.bot, self.cell_height):
                 canvas.draw_line(rect.left, y, rect.right, y)        
 
         """Return a string of structural information."""        
@@ -277,6 +290,20 @@ class PixelEditor:
         if identifier is None:
             identifier = self.active_grid
         self.grids[identifier].adjust_grid_position_to_mouse()
+        self.canvas.freeze()
+        
+    """Set the offset of the specified grid."""
+    def set_grid_offset(self, offset_x: int, offset_y: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
+        self.grids[identifier].set_offset(offset_x, offset_y)
+        self.canvas.freeze()
+        
+    """Adjust the offset of the specified grid."""
+    def adjust_grid_offset(self, offset_x: int, offset_y: int, identifier = None):
+        if identifier is None:
+            identifier = self.active_grid
+        self.grids[identifier].adjust_offset(offset_x, offset_y)
         self.canvas.freeze()
         
     """Add a new grid with the specified attributes."""
@@ -427,6 +454,16 @@ class Actions:
         x, y = interpret_direction(number, direction)
         x2, y2 = interpret_direction(number2, direction2)
         pixel_editor.adjust_grid_spacing_2d(x + x2, y + y2)
+
+    def editor_set_grid_offset(offset_x: int, offset_y: int):
+        """Set the offset of the specified grid."""
+        pixel_editor.set_grid_offset(offset_x, offset_y)
+        
+    def editor_adjust_grid_offset(number: int, direction: str, number2: int, direction2: str):
+        """Adjust the offset of the specified grid."""
+        x, y = interpret_direction(number, direction)
+        x2, y2 = interpret_direction(number2, direction2)
+        pixel_editor.adjust_grid_offset(x + x2, y + y2)
 
     def add_grid(x: int, y: int, width: float, height: float, cell_width: int, cell_height: int):
         """Add a new grid with the specified values."""

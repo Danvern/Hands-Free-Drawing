@@ -7,6 +7,7 @@ from talon.skia import Shader, Color, Paint, Rect
 modo = Module()
 modo.list('directional', desc='Directions for expansion.')
 modo.mode('pixel', desc='Enable editor commands.')
+modo.tag('pixel_fast_mode', desc='Enable faster commands for drawing.')
 
 ctx = Context()
 ctx.lists['user.directional'] = [
@@ -503,6 +504,14 @@ class Actions:
     def scroll_amount(number: int):
         """Scroll the mouse wheel by the specified amount."""
         actions.mouse_scroll(number)
+        
+    def start_fast():
+        """Initialize fast drawing mode."""
+        ctx.tags = ['user.pixel_fast_mode']
+        
+    def stop_fast():
+        """Stop fast drawing mode."""
+        ctx.tags = []
         
             
 pixel_editor = PixelEditor(500, 500)

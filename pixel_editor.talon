@@ -65,6 +65,11 @@ pixel grid switch <number>:
     user.change_grid(number)
     # go to last stored position
     user.move_on_grid(0, "down")
+pixel fast [on]:
+    user.start_fast()
+pixel fast (of|off):
+    user.stop_fast()
+    
 # or  fix this - does not seem to update render even though value is changing
 pixel grid opacity <number>:
     user.editor_set_opacity(number)
@@ -89,7 +94,7 @@ droll:
 # jump to position on grid - COMPLETE
 # move by grid cells - COMPLETE
 # pixel mode - turns off extraneous commands - COMPLETE
-# quick mode - say coordinates or directions without any prefix to move - command to turn on and off
+# quick mode - say coordinates or directions without any prefix to move - command to turn on and off - COMPLETE
 # HSV adjustment that can read in values - COMPLETE (room for improvement in precision)
 # RGB adjustment that can read in values - CLOSED
 # tool commands - COMPLETE

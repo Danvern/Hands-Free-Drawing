@@ -1,5 +1,7 @@
-pixel editor:
-    user.pixel_editor_toggle()
+mode: user.pixel
+-
+#pixel editor:
+#    user.pixel_editor_toggle()
     
 # SET UP FUNCTIONS #
 pixel (sell|cell|so) <number> square:

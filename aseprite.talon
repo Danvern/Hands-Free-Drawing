@@ -2,6 +2,7 @@ os: windows
 and app.name: Aseprite.exe
 os: windows
 and app.exe: Aseprite.exe
+mode: user.pixel
 -
 settings():
     key_wait = 20.0
@@ -73,6 +74,9 @@ crop : key(c)
 
 # NAVIGATION #
 pan up : key(space:down up space:up)
+pan down : key(space:down down space:up)
+pan left : key(space:down left space:up)
+pan right : key(space:down right space:up)
 
 # COLOR #
 color (swap|switch) : key(x)

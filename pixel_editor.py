@@ -1,8 +1,18 @@
 import math
 from typing import Tuple
-
 from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip
-from talon.skia import Shader, Color, Paint, Rect
+from talon.skia import Shader, Color, Paint, Rect                
+
+
+modo = Module()
+modo.list('directional', desc='Directions for expansion.')
+modo.mode('pixel', desc='Enable editor commands.')
+
+ctx = Context()
+ctx.lists['user.directional'] = [
+    'up', 'down', 'right', 'left', 
+]
+
 
 class PixelEditor:
     def __init__(self, width: float, height: float):
@@ -342,16 +352,7 @@ class PixelEditor:
         x = x * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.x
         y = y * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.y
         return x, y
-                
-            
-pixel_editor = PixelEditor(500, 500)
-pixel_editor.enable()
-pixel_editor.add_grid(166, 98, 1706, 632, 8, 8)
-pixel_editor.add_grid(8, 99, 132, 635, 12, 12)
-pixel_editor.add_grid(161, 768, 1725, 230, 23, 23)
 
-modo = Module()
-modo.list('directional', desc='directions for expansion')
 
 """Return integer coordinates from a character - integer combination."""
 def interpret_coordinate(character: str, number: int) -> Tuple[int, int]:
@@ -371,6 +372,7 @@ def interpret_direction(distance: int, direction: str) -> Tuple[int, int]:
     elif direction == 'down':
         return 0, distance
     raise ValueError(f"not a great direction: {direction}")
+
 
 @modo.action_class
 class Actions:
@@ -501,8 +503,10 @@ class Actions:
     def scroll_amount(number: int):
         """Scroll the mouse wheel by the specified amount."""
         actions.mouse_scroll(number)
-
-ctx = Context()
-ctx.lists['user.directional'] = [
-    'up', 'down', 'right', 'left', 
-]
+        
+            
+pixel_editor = PixelEditor(500, 500)
+pixel_editor.enable()
+pixel_editor.add_grid(166, 98, 1706, 632, 8, 8)
+pixel_editor.add_grid(8, 99, 132, 635, 12, 12)
+pixel_editor.add_grid(161, 768, 1725, 230, 23, 23)

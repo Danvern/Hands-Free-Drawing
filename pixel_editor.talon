@@ -67,6 +67,8 @@ pixel grid switch <number>:
 pixel grid opacity <number>:
     user.editor_set_opacity(number)
     
+droll:
+    user.cursor_drag()
 
 # TODO
 
@@ -88,7 +90,7 @@ pixel grid opacity <number>:
 # HSV adjustment that can read in values - COMPLETE (room for improvement in precision)
 # RGB adjustment that can read in values - CLOSED
 # tool commands - COMPLETE
-# dragging commands
+# dragging commands - COMPLETE
 # stroke mode - whether to draw or just move
 
 # translation modes - how the cursor moves from point a to point b (movement patterns via vector like data for custom rotations of shapes/brushes)

@@ -342,8 +342,7 @@ class PixelEditor:
         x = x * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.x
         y = y * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.y
         return x, y
-        
-        
+                
             
 pixel_editor = PixelEditor(500, 500)
 pixel_editor.enable()
@@ -488,6 +487,16 @@ class Actions:
     def editor_set_opacity(percent: int):
         """Set the opacity of the interface to the given value in percent form."""
         pixel_editor.set_opacity(percent)
+
+    def cursor_drag():
+        """Toggle dragging button."""
+        button = 0
+        pressed = button in ctrl.mouse_buttons_down()
+        print(str(ctrl.mouse_buttons_down()))
+        if not pressed:
+            ctrl.mouse_click(button=button, down=True)
+        else:
+            ctrl.mouse_click(button=button, up=True)
         
     def scroll_amount(number: int):
         """Scroll the mouse wheel by the specified amount."""

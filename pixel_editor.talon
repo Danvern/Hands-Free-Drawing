@@ -88,6 +88,7 @@ droll:
 
 # jump to position on grid - COMPLETE
 # move by grid cells - COMPLETE
+# pixel mode - turns off extraneous commands - COMPLETE
 # quick mode - say coordinates or directions without any prefix to move - command to turn on and off
 # HSV adjustment that can read in values - COMPLETE (room for improvement in precision)
 # RGB adjustment that can read in values - CLOSED

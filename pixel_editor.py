@@ -14,6 +14,7 @@ ctx.lists['user.directional'] = [
     'up', 'down', 'right', 'left', 
 ]
 
+keys_held = []
 
 class PixelEditor:
     def __init__(self, width: float, height: float):
@@ -392,6 +393,12 @@ def status_bar(gui: imgui.GUI):
         for button in ctrl.mouse_buttons_down():
             mouse_status = mouse_status + mouse_dictionary[button] + ", "
         gui.text(mouse_status)
+    global keys_held
+    if len(keys_held) > 0:
+        key_status = "K: "
+        for key in keys_held:
+            key_status = key_status + key + ", "
+        gui.text(key_status)
         
         
 @modo.action_class
@@ -403,6 +410,10 @@ class Actions:
     def pixel_editor_off():
         """Turn off the pixel editor."""
         pixel_editor.disable()
+        global keys_held
+        for key in keys_held:
+            ctrl.key_press(key=key, down=False)
+        keys_held.clear()
 
     def pixel_editor_toggle():
         """Turn on the pixel editor, or off if it is already on."""
@@ -554,6 +565,16 @@ class Actions:
         while number > 0:
             ctrl.key_press(key=base_key, shift=shift, ctrl=ctrlk, alt=alt)
             number -= 1
+        
+    def toggle_key(key: str):
+        """Toggle holding down the specified key."""
+        global keys_held
+        if key in keys_held:
+            ctrl.key_press(key=key, down=False)
+            keys_held.remove(key)
+        else:
+            ctrl.key_press(key=key, down=True)
+            keys_held.append(key)
         
     def start_fast():
         """Initialize fast drawing mode."""

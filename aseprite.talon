@@ -8,6 +8,15 @@ settings():
     key_wait = 20.0
     key_hold = 20.0
 
+# FILE #
+file save : key(ctrl-s)
+
+# MODIFIER #
+hold shift: user.toggle_key("shift")
+hold control: user.toggle_key("ctrl")
+hold space: user.toggle_key("space")
+hold (all|alternate): user.toggle_key("alt")
+
 # DRAW #
 draw [left] : mouse_click(0)
 draw right : mouse_click(1)
@@ -151,7 +160,7 @@ color (opacity|fade) <number> down:
     key(ctrl-space:up)
     
 # TIMELINE #
-timeline grid : user.change_grid(2)
+(timeline|layer) grid : user.change_grid(2)
 (lop|loop) section : key(f2)
 onion [skin] : key(f3)
 

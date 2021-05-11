@@ -51,6 +51,8 @@ pixel load default:
 # NAVIGATION #
 cart <user.letter> <number>:
     user.jump_to_grid(letter, number)
+cart <number> (by|and) <number>:
+    user.jump_to_grid_n(number, number)
 slide {user.directional}:
     user.move_on_grid(1, directional_1)
 slide <number> {user.directional}:
@@ -74,8 +76,14 @@ pixel fast (of|off):
 pixel grid opacity <number>:
     user.editor_set_opacity(number)
     
-droll:
-    user.cursor_drag()
+droll [left]:
+    user.cursor_drag(0)
+droll [right]:
+    user.cursor_drag(1)
+
+# REPEAT #
+(repeat that|twice): core.repeat_command(1)
+repeat that <number_small> [times]: core.repeat_command(number_small)
 
 # TODO
 

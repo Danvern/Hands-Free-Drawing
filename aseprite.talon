@@ -15,11 +15,11 @@ brush (big|bigger|large|larger|grow) : key(=)
 brush (small|smaller|shrink) : key(-)
 
 # EDIT #
-#undo that : key(ctrl-z)  
-#redo that : key(ctrl-y)
-#cut that : key(ctrl-x)
-#copy that : key(ctrl-c)
-#paste that : key(ctrl-v)
+undo that : key(ctrl-z)  
+redo that : key(ctrl-y)
+cut that : key(ctrl-x)
+copy that : key(ctrl-c)
+paste that : key(ctrl-v)
 select stroke : key(s)
 select fill : key(f)
 select all : key(ctrl-a)
@@ -34,9 +34,17 @@ select (tile|till):
 
 # TRANSFORMATION #
 move up : key(up)
+move <number> up: 
+    user.repeat_key("up", number)
 move down : key(down)
+move <number> down:
+    user.repeat_key("down", number)
 move left : key(left)
+move <number> left:
+    user.repeat_key("left", number)
 move right : key(right)
+move <number> right:
+    user.repeat_key("right", number)
 flip horizontal : key(shift-h)
 flip vertical : key(shift-v)
     
@@ -73,10 +81,19 @@ text : key(t)
 crop : key(c)
 
 # NAVIGATION #
+canvas grid : user.change_grid(0)
 pan up : key(space:down up space:up)
+pan <number> up:
+    user.repeat_key("space-up", number)
 pan down : key(space:down down space:up)
+pan <number> down:
+    user.repeat_key("space-down", number)
 pan left : key(space:down left space:up)
+pan <number> left:
+    user.repeat_key("space-left", number)
 pan right : key(space:down right space:up)
+pan <number> right:
+    user.repeat_key("space-right", number)
 
 # COLOR #
 color (swap|switch) : key(x)
@@ -91,21 +108,21 @@ color (you|hue) <number> down:
     user.scroll_amount(0 - number)
     key(ctrl:up)
 color (saturation|that|sat) <number> up:
-    key(ctrl-shift:down)
+    key(ctrl-alt:down)
     user.scroll_amount(number)
-    key(ctrl-shift:up)
+    key(ctrl-alt:up)
 color (saturation|that|sat) <number> down:
+    key(ctrl-alt:down)
+    user.scroll_amount(0 - number)
+    key(ctrl-alt:up)
+color (value|light|lightness) <number> up:
+    key(ctrl-shift:down)
+    user.scroll_amount(number)
+    key(ctrl-shift:up)
+color (value|light|lightness) <number> down:
     key(ctrl-shift:down)
     user.scroll_amount(0 - number)
     key(ctrl-shift:up)
-color (value|light|lightness) <number> up:
-    key(ctrl-alt:down)
-    user.scroll_amount(number)
-    key(ctrl-alt:up)
-color (value|light|lightness) <number> down:
-    key(ctrl-alt:down)
-    user.scroll_amount(0 - number)
-    key(ctrl-alt:up)
 color (opacity|fade) <number> up:
     key(ctrl-space:down)
     user.scroll_amount(number)

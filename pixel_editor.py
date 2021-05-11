@@ -395,6 +395,11 @@ class Actions:
         x, y = pixel_editor.clamp_cell_coordinate(x, y)
         pixel_editor.move_cursor_to_cell(x, y)
         
+    def jump_to_grid_n(x: int, y: int):
+        """Move the cursor to the indicated position."""
+        x, y = pixel_editor.clamp_cell_coordinate(x, y)
+        pixel_editor.move_cursor_to_cell(x, y)
+        
     def move_on_grid(number: int, direction: str):
         """Move the cursor by the indicated amount of cells."""
         x, y = interpret_direction(number, direction)
@@ -491,12 +496,14 @@ class Actions:
         """Set the opacity of the interface to the given value in percent form."""
         pixel_editor.set_opacity(percent)
 
-    def cursor_drag():
+    def cursor_drag(button: int):
         """Toggle dragging button."""
-        button = 0
         pressed = button in ctrl.mouse_buttons_down()
         print(str(ctrl.mouse_buttons_down()))
         if not pressed:
+            for other in ctrl.mouse_buttons_down():
+                if other != button:
+                    ctrl.mouse_click(button=other, down=False)
             ctrl.mouse_click(button=button, down=True)
         else:
             ctrl.mouse_click(button=button, up=True)
@@ -504,6 +511,30 @@ class Actions:
     def scroll_amount(number: int):
         """Scroll the mouse wheel by the specified amount."""
         actions.mouse_scroll(number)
+        
+    def repeat_key(key: str, number: int):
+        """Press the specified key for the specified amount of times."""
+        space = shift = ctrlk = alt = False
+        for word in key.split('-'):
+            if word == 'space': 
+                space = True
+            elif word == 'shift':
+                shift = True
+            elif word == 'ctrl':
+                ctrlk = True
+            elif word == 'alt':
+                alt = True
+            else:
+                base_key = word
+        if space:
+            while number > 0:
+                ctrl.key_press(key="space", down=True)
+                ctrl.key_press(key=base_key, shift=shift, ctrl=ctrlk, alt=alt)
+                ctrl.key_press(key="space", down=False)
+                number -= 1
+        while number > 0:
+            ctrl.key_press(key=base_key, shift=shift, ctrl=ctrlk, alt=alt)
+            number -= 1
         
     def start_fast():
         """Initialize fast drawing mode."""

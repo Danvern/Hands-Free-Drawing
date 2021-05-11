@@ -94,6 +94,24 @@ pan <number> left:
 pan right : key(space:down right space:up)
 pan <number> right:
     user.repeat_key("space-right", number)
+zoom one:
+    key(1)
+    user.editor_set_spacing(1)
+zoom two:
+    key(2)
+    user.editor_set_spacing(2)
+zoom three:
+    key(3)
+    user.editor_set_spacing(4)
+zoom four:
+    key(4)
+    user.editor_set_spacing(8)
+zoom five:
+    key(5)
+    user.editor_set_spacing(16)
+zoom six:
+    key(6)
+    user.editor_set_spacing(32)
 
 # COLOR #
 color (swap|switch) : key(x)

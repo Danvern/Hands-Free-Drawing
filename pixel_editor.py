@@ -1,6 +1,6 @@
 import math
 from typing import Tuple
-from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip
+from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip, imgui
 from talon.skia import Shader, Color, Paint, Rect                
 
 
@@ -373,8 +373,27 @@ def interpret_direction(distance: int, direction: str) -> Tuple[int, int]:
     elif direction == 'down':
         return 0, distance
     raise ValueError(f"not a great direction: {direction}")
-
-
+        
+@imgui.open(y=0)
+def status_bar(gui: imgui.GUI):
+    gui.text("Pixel Editor")
+    gui.line()
+    if "user.pixel_fast_mode" in ctx.tags:
+        gui.text("FAST")
+    if len(ctrl.mouse_buttons_down()) > 0:
+        mouse_dictionary = {
+            0: "left",
+            1: "right",
+            2: "middle",
+            3: "side up",
+            4: "side down",
+        }
+        mouse_status = "M: "
+        for button in ctrl.mouse_buttons_down():
+            mouse_status = mouse_status + mouse_dictionary[button] + ", "
+        gui.text(mouse_status)
+        
+        
 @modo.action_class
 class Actions:
     def pixel_editor_on():
@@ -544,6 +563,21 @@ class Actions:
         """Stop fast drawing mode."""
         ctx.tags = []
         
+    def status_toggle():
+        """Toggle viewing the status panel."""
+        if status_bar.showing:
+            status_bar.hide()
+        else:
+            status_bar.show()
+
+    def status_enable():
+        """Enable the status panel."""
+        status_bar.show()
+
+    def status_disable():
+        """Disable the status panel."""
+        status_bar.hide()
+
             
 pixel_editor = PixelEditor(500, 500)
 pixel_editor.enable()

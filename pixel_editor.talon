@@ -71,19 +71,23 @@ pixel fast [on]:
     user.start_fast()
 pixel fast (of|off):
     user.stop_fast()
-    
-# or  fix this - does not seem to update render even though value is changing
-pixel grid opacity <number>:
-    user.editor_set_opacity(number)
-    
+
 droll [left]:
     user.cursor_drag(0)
 droll [right]:
     user.cursor_drag(1)
 
+
 # REPEAT #
 (repeat that|twice): core.repeat_command(1)
 repeat that <number_small> [times]: core.repeat_command(number_small)
+
+# INTERFACE #
+pixel status: user.status_toggle()    
+# or  fix this - does not seem to update render even though value is changing
+pixel grid opacity <number>:
+    user.editor_set_opacity(number)
+
 
 # TODO
 

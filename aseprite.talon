@@ -10,6 +10,8 @@ settings():
 
 # FILE #
 file save : key(ctrl-s)
+(enter|confirm) : key(enter)
+(escape|cancel) : key(esc)
 
 # MODIFIER #
 hold shift: user.toggle_key("shift")
@@ -126,14 +128,14 @@ zoom six:
 color (swap|switch) : key(x)
 color grid : user.change_grid(1)
 color (you|hue) <number> up:
-    key(ctrl:down)
+    key(ctrl-alt-shift:down)
     #mouse_scroll(number, 0)
     user.scroll_amount(number)
-    key(ctrl:up)
+    key(ctrl-alt-shift:up)
 color (you|hue) <number> down:
-    key(ctrl:down)
+    key(ctrl-alt-shift:down)
     user.scroll_amount(0 - number)
-    key(ctrl:up)
+    key(ctrl-alt-shift:up)
 color (saturation|that|sat) <number> up:
     key(ctrl-alt:down)
     user.scroll_amount(number)

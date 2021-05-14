@@ -66,9 +66,9 @@ pixel fast [on]:
 pixel fast (of|off):
     user.stop_fast()
 
-droll [left]:
+track [left]:
     user.cursor_drag(0)
-droll [right]:
+track [right]:
     user.cursor_drag(1)
 
 

@@ -41,7 +41,6 @@ pixel load default:
     user.add_grid(8, 99, 132, 635, 12, 12)
     user.add_grid(161, 768, 1725, 230, 23, 23)
 
-
 # NAVIGATION #
 cart <user.letter> <number>:
     user.jump_to_grid(letter, number)
@@ -66,11 +65,19 @@ pixel fast [on]:
 pixel fast (of|off):
     user.stop_fast()
 
+# MOUSE #
 track [left]:
     user.cursor_drag(0)
 track [right]:
     user.cursor_drag(1)
+draw [left] : mouse_click(0)
+draw right : mouse_click(1)
 
+# MODIFIER #
+hold shift: user.toggle_key("shift")
+hold control: user.toggle_key("ctrl")
+hold space: user.toggle_key("space")
+hold (all|alternate): user.toggle_key("alt")
 
 # REPEAT #
 (repeat that|twice): core.repeat_command(1)
@@ -108,7 +115,21 @@ pixel grid opacity <number>:
 
 # stroke mode - whether to draw or just move
 # fixed and dynamic way points for quick drawing of lines and curves
-# holding modifier keys for increased tool functionality
+# holding modifier keys for increased tool functionality - COMPLETE
+# make click and drag commands program non specific - COMPLETE
+# make hold keys program non specific - COMPLETE
+# relief all keys when pixel editor is turned off - COMPLETE
+# relief all keys when pushed to talk is turned off - COMPLETE
+# unbound mouse movement commands
+# toll options cursor jump point
+# color well cursor jump point
+# drag command stopped whatever drag is active instead of allowing too with once - COMPLETE
+
+# hope file interactive version
+# read me - quick start
+# licensing
+# github
+# aseprite settings file (and instructions on how the color wheel needs to be set up+)
 
 # translation modes - how the cursor moves from point a to point b (movement patterns via vector like data for custom rotations of shapes/brushes)
 # anti-alliasing script / edge patterning 

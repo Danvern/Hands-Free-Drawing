@@ -42,6 +42,7 @@ class PixelEditor:
         self.enabled = False
         self.canvas.close()
         self.canvas = None
+        release_all()
 
     def toggle(self):
         if self.enabled:
@@ -400,6 +401,17 @@ def status_bar(gui: imgui.GUI):
             key_status = key_status + key + ", "
         gui.text(key_status)
         
+"""Release any keys currently held by the program."""
+def release_all():
+    global keys_held
+    if len(keys_held) > 0:
+        for key in keys_held:
+            ctrl.key_press(key=key, down=False)
+    mouse_held = ctrl.mouse_buttons_down()
+    if len(mouse_held) > 0:
+        for button in mouse_held:
+            ctrl.mouse_click(button=button, up=True)
+        
         
 @modo.action_class
 class Actions:
@@ -533,7 +545,8 @@ class Actions:
         if not pressed:
             for other in ctrl.mouse_buttons_down():
                 if other != button:
-                    ctrl.mouse_click(button=other, down=False)
+                    ctrl.mouse_click(button=other, up=True)
+                    return
             ctrl.mouse_click(button=button, down=True)
         else:
             ctrl.mouse_click(button=button, up=True)
@@ -543,7 +556,7 @@ class Actions:
         actions.mouse_scroll(number)
         
     def repeat_key(key: str, number: int):
-        """Press the specified key for the specified amount of times."""
+        """Press the specifi5ed key for the specified amount of times."""
         space = shift = ctrlk = alt = False
         for word in key.split('-'):
             if word == 'space': 
@@ -575,6 +588,10 @@ class Actions:
         else:
             ctrl.key_press(key=key, down=True)
             keys_held.append(key)
+
+    def release_all_keys():
+        """Release any keys currently held by the program."""
+        release_all()
         
     def start_fast():
         """Initialize fast drawing mode."""

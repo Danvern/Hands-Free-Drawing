@@ -13,15 +13,7 @@ file save : key(ctrl-s)
 (enter|confirm) : key(enter)
 (escape|cancel) : key(esc)
 
-# MODIFIER #
-hold shift: user.toggle_key("shift")
-hold control: user.toggle_key("ctrl")
-hold space: user.toggle_key("space")
-hold (all|alternate): user.toggle_key("alt")
-
 # DRAW #
-draw [left] : mouse_click(0)
-draw right : mouse_click(1)
 brush (big|bigger|large|larger|grow) : key(=)
 brush (small|smaller|shrink) : key(-)
 

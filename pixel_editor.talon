@@ -72,6 +72,10 @@ track [right]:
     user.cursor_drag(1)
 draw [left] : mouse_click(0)
 draw right : mouse_click(1)
+sneak <number> {user.directional}:
+    user.move_free(number_1, directional_1)
+sneak <number> {user.directional} <number> {user.directional}:
+    user.move_free_2d(number_1, directional_1, number_2, directional_2)
 
 # MODIFIER #
 hold shift: user.toggle_key("shift")
@@ -120,7 +124,7 @@ pixel grid opacity <number>:
 # make hold keys program non specific - COMPLETE
 # relief all keys when pixel editor is turned off - COMPLETE
 # relief all keys when pushed to talk is turned off - COMPLETE
-# unbound mouse movement commands
+# unbound mouse movement commands - COMPLETE
 # toll options cursor jump point
 # color well cursor jump point
 # drag command stopped whatever drag is active instead of allowing too with once - COMPLETE

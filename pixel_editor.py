@@ -442,6 +442,19 @@ class Actions:
         x, y = pixel_editor.clamp_cell_coordinate(x, y)
         pixel_editor.move_cursor_to_cell(x, y)
         
+    def move_free(number: int, direction: str):
+        """Move the cursor independently from the grid."""
+        x, y = interpret_direction(number, direction)
+        x, y = x + ctrl.mouse_pos()[0], y + ctrl.mouse_pos()[1]
+        ctrl.mouse_move(x, y)
+                
+    def move_free_2d(number: int, direction: str, number2: int, direction2: str):
+        """Move the cursor independently from the grid."""
+        x, y = interpret_direction(number, direction)
+        x2, y2 = interpret_direction(number2, direction2)
+        x, y = x + x2 + ctrl.mouse_pos()[0], y + y2 + ctrl.mouse_pos()[1]
+        ctrl.mouse_move(x, y)
+        
     def move_on_grid(number: int, direction: str):
         """Move the cursor by the indicated amount of cells."""
         x, y = interpret_direction(number, direction)

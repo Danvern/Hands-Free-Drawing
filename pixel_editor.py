@@ -331,6 +331,7 @@ class PixelEditor:
     """Switch to the specified number grid."""
     def set_active_grid(self, grid = 0):
         self.active_grid = grid if (grid > 0 and grid < len(self.grids)) else 0
+        self.move_cursor_to_cell(*self.grids[self.active_grid].last_cell)
         self.canvas.freeze()
 
     """Print out the values of contained grids."""

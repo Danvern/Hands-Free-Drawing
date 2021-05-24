@@ -127,6 +127,7 @@ pixel grid opacity <number>:
 # unbound mouse movement commands - COMPLETE
 # toll options cursor jump point
 # color well cursor jump point
+# jump cursor when the current grid is changed - COMPLETE
 # drag command stopped whatever drag is active instead of allowing too with once - COMPLETE
 
 # hope file interactive version

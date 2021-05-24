@@ -1,4 +1,8 @@
 os: windows
+and app.name: Aseprite - Animated sprites editor & pixel art tool
+os: windows
+and app.exe: Aseprite.EXE
+os: windows
 and app.name: Aseprite.exe
 os: windows
 and app.exe: Aseprite.exe
@@ -34,6 +38,8 @@ select (tile|till):
     mouse_click(0)
     mouse_click(0)
 # working with adding selections is going to require some more thought
+delete: key(delete)
+fill selection: key(f)
 
 # TRANSFORMATION #
 move up : key(up)

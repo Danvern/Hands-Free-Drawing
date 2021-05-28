@@ -11,4 +11,4 @@ tag: user.pixel_fast_mode
     user.move_on_grid_2d(number, directional_1, number, directional_2)
 <number> {user.directional} <number> {user.directional}:
     user.move_on_grid_2d(number_1, directional_1, number_2, directional_2)
-testing:"fast mode is indeed on"
+#testing:"fast mode is indeed on"

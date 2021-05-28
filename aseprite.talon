@@ -58,6 +58,7 @@ flip horizontal : key(shift-h)
 flip vertical : key(shift-v)
     
 # TOOLS #
+(tool|toll) options : user.jump_to_anchor(168, 82, 'top', 'left')
 select square : key(m)
 select circle : key(shift-m)
 select lasso : key(q)
@@ -125,6 +126,7 @@ zoom six:
 # COLOR #
 color (swap|switch) : key(x)
 color grid : user.change_grid(1)
+color wheel : user.jump_to_anchor(79, -189, 'bottom', 'left')
 color (you|hue) <number> up:
     key(ctrl-alt-shift:down)
     #mouse_scroll(number, 0)

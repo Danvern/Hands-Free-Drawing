@@ -6,12 +6,16 @@ from talon.skia import Shader, Color, Paint, Rect
 
 modo = Module()
 modo.list('directional', desc='Directions for expansion.')
+modo.list('anchor', desc='Directions for window anchors.')
 modo.mode('pixel', desc='Enable editor commands.')
 modo.tag('pixel_fast_mode', desc='Enable faster commands for drawing.')
 
 ctx = Context()
 ctx.lists['user.directional'] = [
     'up', 'down', 'right', 'left', 
+]
+ctx.lists['user.anchor'] = [
+    'top', 'bottom', 'right', 'left', 'centre', 
 ]
 
 keys_held = []
@@ -377,6 +381,57 @@ def interpret_direction(distance: int, direction: str) -> Tuple[int, int]:
         return 0, distance
     raise ValueError(f"not a great direction: {direction}")
         
+"""Return relative position of the cursor to the currently active window."""
+def get_window_cursor_position() -> Tuple[int, int]:
+    window = ui.active_window().rect
+    return ctrl.mouse_pos()[0] - window.x, ctrl.mouse_pos()[1] - window.y
+        
+"""Return cursor position relative to specified anchor point."""
+def get_position_from_anchor(vertical: str, horizontal: str) -> Tuple[int, int]:
+    x, y = get_window_cursor_position()
+    window = ui.active_window().rect
+    if vertical == 'top':
+        #  Do nothing as coordinates are already relative to top left point.
+        pass
+    elif vertical == 'bottom':
+        y -= window.height
+    else:
+        # Assume center / middle.
+        y -= window.height / 2
+    if horizontal == 'left':
+        #  Do nothing as coordinates are already relative to top left point.
+        pass
+    elif horizontal == 'right':
+        x -= window.width
+    else:
+        # Assume center / middle.
+        x -= window.width / 2
+    return x, y
+    
+"""Move the cursor to the specified point relative to the specified anchor."""
+def set_position_from_anchor(x: int, y: int, vertical: str, horizontal: str):
+    window = ui.active_window().rect
+    x, y = x + window.x, y + window.y
+    if vertical == 'top':
+        pass
+    elif vertical == 'bottom':
+        y += window.height
+    elif vertical == 'centre':
+        y += window.height / 2
+    if horizontal == 'left':
+        pass
+    elif horizontal == 'right':
+        x += window.width
+    elif horizontal == 'centre':
+        x += window.width / 2
+    ctrl.mouse_move(x, y)
+
+"""Generate command to move purser relative to anchor and copy it to clipboard."""
+def dump_anchor_command(vertical: str, horizontal: str):
+    x, y = get_position_from_anchor(vertical, horizontal)
+    command = f"user.jump_to_anchor({x}, {y}, '{vertical}', '{horizontal}')"
+    clip.set_text(command)
+        
 @imgui.open(y=0)
 def status_bar(gui: imgui.GUI):
     gui.text("Pixel Editor")
@@ -442,6 +497,14 @@ class Actions:
         """Move the cursor to the indicated position."""
         x, y = pixel_editor.clamp_cell_coordinate(x, y)
         pixel_editor.move_cursor_to_cell(x, y)
+        
+    def jump_to_anchor(x: int, y: int, vertical: str, horizontal: str):
+        """Move the cursor to the anchored position."""
+        set_position_from_anchor(x, y, vertical, horizontal)
+        
+    def dump_anchor(vertical: str, horizontal: str):
+        """Generate command to move cursor relative to anchor and copy it to clipboard."""
+        dump_anchor_command(vertical, horizontal)
         
     def move_free(number: int, direction: str):
         """Move the cursor independently from the grid."""

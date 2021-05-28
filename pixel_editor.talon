@@ -64,6 +64,10 @@ pixel fast [on]:
     user.start_fast()
 pixel fast (of|off):
     user.stop_fast()
+anchor dump {user.anchor} {user.anchor}:
+    user.dump_anchor(anchor_1, anchor_2)
+#anchor test:
+#    user.jump_to_anchor(-321, -620, 'bottom', 'right')
 
 # MOUSE #
 track [left]:

@@ -125,6 +125,8 @@ zoom six:
 
 # COLOR #
 color (swap|switch) : key(x)
+color (next|right) : key(])
+color (previous|left) : key([)
 color grid : user.change_grid(1)
 color wheel : user.jump_to_anchor(79, -189, 'bottom', 'left')
 color (you|hue) <number> up:

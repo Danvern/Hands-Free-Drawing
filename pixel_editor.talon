@@ -129,8 +129,8 @@ pixel grid opacity <number>:
 # relief all keys when pixel editor is turned off - COMPLETE
 # relief all keys when pushed to talk is turned off - COMPLETE
 # unbound mouse movement commands - COMPLETE
-# toll options cursor jump point
-# color well cursor jump point
+# toll options cursor jump pointo - COMPLETE
+# color well cursor jump point - COMPLETE
 # jump cursor when the current grid is changed - COMPLETE
 # drag command stopped whatever drag is active instead of allowing too with once - COMPLETE
 

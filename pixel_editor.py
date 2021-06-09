@@ -1,6 +1,6 @@
-import math
+import math, csv
 from typing import Tuple
-from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip, imgui
+from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip, imgui, registry
 from talon.skia import Shader, Color, Paint, Rect                
 
 
@@ -216,7 +216,7 @@ class PixelEditor:
     """Return clamped grid cell coordinate from potentially out of bounds one."""
     def clamp_cell_coordinate(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
         if identifier is None:
-            identifier = self.active_grid
+            iden55tifier = self.active_grid
         x = min(max(0, x), self.grids[identifier].get_cells_wide())
         y = min(max(0, y), self.grids[identifier].get_cells_tall())
         return x, y
@@ -360,8 +360,80 @@ class PixelEditor:
         x = x * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.x
         y = y * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.y
         return x, y
-
-
+        
+# Here be dragons, giant documentation section ahead.
+def ready_documentation():    
+    program_context_map = {}
+    command_context_map = {}
+    # obtain context for editor commands (+aseprite)
+    for context_name, context in registry.contexts.items():
+        short_name = ""
+        splits = context_name.split(".")
+        index = -1
+        if "talon" in splits[index]:
+            index = -2
+            short_name = splits[index].replace("_", " ")
+        else:
+            short_name = splits[index].replace("_", " ")
+        if short_name == "pixel editor" or short_name == "aseprite":
+            program_context_map[short_name] = context
+            command_context_map[short_name] = []
+    
+    for name, context in program_context_map.items():
+        for value in context.commands.values():
+            command_context_map[name].append(str(value.rule.rule))
+            
+    
+    # open csv file (if it does not exist - lazy override prevention)
+    with open("documentation.csv", 'w', newline='') as f:
+        fieldnames = ['program', 'command']
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for program, commands in command_context_map.items():
+            for format in commands:
+                writer.writerow({'program': program, 'command': format})
+            
+        
+    # loop through context to process commands
+    
+    # for each command add to csv file (program + format, leave name description and the category blank)
+    # close csv file
+    pass
+    
+def load_documentation():
+    # prepared dictionary (ordered) of context containing categories
+    # prepared dictionary of categories containing commands
+    # open csv file for reading
+    # load in the predefined list
+    # clothes file
+    pass
+    
+def display_documentation():
+    # check category
+    # chuck selected command
+    # of options are not negative assume selected
+    # display in basic window
+    pass
+    
+def select_number_command():
+    # check what is selected
+    # go one level down
+    pass
+    
+def reset_documentation():
+    # reset all selective value
+    pass
+    
+def go_back():
+    # go back one level documentation
+    pass
+    
+def close_documentation():
+    # reset and close
+    pass
+    
+# ready_documentation()
+    
 """Return integer coordinates from a character - integer combination."""
 def interpret_coordinate(character: str, number: int) -> Tuple[int, int]:
     x = number
@@ -425,7 +497,7 @@ def set_position_from_anchor(x: int, y: int, vertical: str, horizontal: str):
     elif horizontal == 'centre':
         x += window.width / 2
     ctrl.mouse_move(x, y)
-
+5
 """Generate command to move purser relative to anchor and copy it to clipboard."""
 def dump_anchor_command(vertical: str, horizontal: str):
     x, y = get_position_from_anchor(vertical, horizontal)

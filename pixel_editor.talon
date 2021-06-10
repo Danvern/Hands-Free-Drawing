@@ -96,6 +96,7 @@ pixel status: user.status_toggle()
 # or  fix this - does not seem to update render even though value is changing
 pixel grid opacity <number>:
     user.editor_set_opacity(number)
+help: user.pixel_help_toggle()
 
 
 # TODO
@@ -134,7 +135,10 @@ pixel grid opacity <number>:
 # jump cursor when the current grid is changed - COMPLETE
 # drag command stopped whatever drag is active instead of allowing too with once - COMPLETE
 
-# hope file interactive version
+# hope file interactive version - COMPLETE
+# integrated command history with status - COMPLETE
+# states shows active grid, help, or if mode is inactive
+# clean start state
 # read me - quick start
 # licensing
 # github

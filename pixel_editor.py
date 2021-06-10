@@ -1,6 +1,6 @@
 import math, csv
 from typing import Tuple
-from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip, imgui, registry
+from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip, imgui, speech_system
 from talon.skia import Shader, Color, Paint, Rect                
 
 
@@ -9,6 +9,7 @@ modo.list('directional', desc='Directions for expansion.')
 modo.list('anchor', desc='Directions for window anchors.')
 modo.mode('pixel', desc='Enable editor commands.')
 modo.tag('pixel_fast_mode', desc='Enable faster commands for drawing.')
+modo.tag('pixel_help_mode', desc='Enable commands for navigating the help panel.')
 
 ctx = Context()
 ctx.lists['user.directional'] = [
@@ -362,6 +363,12 @@ class PixelEditor:
         return x, y
         
 # Here be dragons, giant documentation section ahead.
+program_category_map = {}
+category_command_map = {}
+current_category = None
+current_command = -1
+help_text = []
+
 def ready_documentation():    
     program_context_map = {}
     command_context_map = {}
@@ -406,32 +413,99 @@ def load_documentation():
     # open csv file for reading
     # load in the predefined list
     # clothes file
-    pass
+    global program_category_map
+    global category_command_map
+    # print(program_category_map.get('air'))
+    with open('user/artificer_talon/pixel_documentation.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        n = 0
+        for row in reader:
+            # print(row)
+            if n > 0:
+                if program_category_map.get(row['program']) is None:
+                    categories = {}
+                    program_category_map[row['program']] = categories
+                if program_category_map[row['program']].get(row['category']) is None:
+                    program_category_map[row['program']][row['category']] = []
+                    category_command_map[row['category']] = []
+                program_category_map[row['program']][row['category']].append({'command': row['command'], 'name': row['name'], 'description': row['description']})
+                category_command_map[row['category']].append({'command': row['command'], 'name': row['name'], 'description': row['description']})
+                print(program_category_map)
+            n += 1 
     
 def display_documentation():
     # check category
     # chuck selected command
     # of options are not negative assume selected
     # display in basic window
-    pass
+    global current_category
+    global current_command
+    global program_category_map
+    global help_text
+    help_text = []
+    n = 1
+    if current_category is None:
+#         print(program_category_map or )
+        for categoryDict in program_category_map.values():
+#             print('test')
+            for category in categoryDict.keys():
+                print(category)
+                help_text.append(f"{n}. {category}")
+                n += 1
+    elif current_command < 0:
+        for command in category_command_map[current_category]:
+            help_text.append(f"{n}. {command['command']}")
+            n += 1
+    else:
+        for information in category_command_map[current_category][current_command].values():
+            help_text.append(information)
     
-def select_number_command():
+def select_number_command(number: int):
     # check what is selected
     # go one level down
-    pass
+    global current_category
+    global current_command
+    if current_category is None:
+        if number >= 0 or number < len(help_text):
+            # print(category_command_map.keys())
+            current_category = list(category_command_map.keys())[number - 1]
+    else:
+        if number >= 0 or number < len(help_text):
+            current_command = number - 1
+    display_documentation()
     
 def reset_documentation():
     # reset all selective value
-    pass
+    global current_category
+    global current_command
+    current_category = None
+    current_command = -1
+    display_documentation()
     
 def go_back():
     # go back one level documentation
-    pass
+    global current_category
+    global current_command
+    if current_command > -1:
+        current_command = -1
+    else:
+        current_category = None
+    display_documentation()
     
-def close_documentation():
-    # reset and close
-    pass
-    
+@imgui.open(y=0)
+def help_bar(gui: imgui.GUI):
+    gui.text("PE Help")
+    gui.line()
+    global help_text
+    for text in help_text:
+        gui.text(text)
+        
+load_documentation()
+# display_documentation()
+# help_bar.show()
+# select_number_command(13)
+# select_number_command(1)
+# print(ctx.tags)
 # ready_documentation()
     
 """Return integer coordinates from a character - integer combination."""
@@ -504,9 +578,28 @@ def dump_anchor_command(vertical: str, horizontal: str):
     command = f"user.jump_to_anchor({x}, {y}, '{vertical}', '{horizontal}')"
     clip.set_text(command)
         
+last_command = None
+
+def parse_phrase(phrase):
+    return " ".join(word.split("\\")[0] for word in phrase)
+
+
+def on_phrase(p):
+    global last_command
+    try:
+        val = parse_phrase(getattr(p["parsed"], "_unmapped", p["phrase"]))
+    except:
+        val = parse_phrase(p["phrase"])
+    if val != "":
+        last_command = val
+        
+speech_system.register('phrase', on_phrase)
+        
 @imgui.open(y=0)
 def status_bar(gui: imgui.GUI):
+    global last_command
     gui.text("Pixel Editor")
+    gui.text(last_command)
     gui.line()
     if "user.pixel_fast_mode" in ctx.tags:
         gui.text("FAST")
@@ -744,11 +837,11 @@ class Actions:
         
     def start_fast():
         """Initialize fast drawing mode."""
-        ctx.tags = ['user.pixel_fast_mode']
+        ctx.tags.add('user.pixel_fast_mode')
         
     def stop_fast():
         """Stop fast drawing mode."""
-        ctx.tags = []
+        ctx.tags.discard('user.pixel_fast_mode')
         
     def status_toggle():
         """Toggle viewing the status panel."""
@@ -764,6 +857,38 @@ class Actions:
     def status_disable():
         """Disable the status panel."""
         status_bar.hide()
+        
+    def pixel_help_toggle():
+        """Toggle viewing the help panel."""
+        if help_bar.showing:
+            reset_documentation()
+            help_bar.hide()
+            ctx.tags.discard('user.pixel_help_mode')
+            print(ctx.tags)
+        else:
+            help_bar.show()
+            display_documentation()
+            ctx.tags.add('user.pixel_help_mode')
+            print(ctx.tags)
+            
+    def pixel_help_enable():
+        """Enable the help panel."""
+        help_bar.show()
+        ctx.tags.add('user.pixel_help_mode')
+    
+    def pixel_help_disable():
+        """Disable the help panel."""
+        reset_documentation()
+        help_bar.hide()
+        ctx.tags.discard('user.pixel_help_mode')
+        
+    def pixel_help_select(number: int):
+        """Displayed number topic."""
+        select_number_command(number)
+        
+    def pixel_help_back():
+        """Go back to to the previous that of topics."""
+        go_back()
 
             
 pixel_editor = PixelEditor(500, 500)

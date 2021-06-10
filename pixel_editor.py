@@ -22,7 +22,7 @@ ctx.lists['user.anchor'] = [
 keys_held = []
 
 class PixelEditor:
-    def __init__(self, width: float, height: float):
+    def __init__(self):
         self.enabled = False
         self.canvas = None
         screen = ui.screens()[0]
@@ -126,7 +126,7 @@ class PixelEditor:
 
         """Set the upper left corner of the grid to the specified point."""
         def set_grid_position(self, x: int, y: int):
-            print(self.get_info())
+            # print(self.get_info())
             if(x > self.max_rect.width):
                 self.bounding_rect.x = self.max_rect.width - 1
             elif(x > 0):
@@ -139,7 +139,7 @@ class PixelEditor:
                 self.bounding_rect.y = y
             else:
                 self.bounding_rect.y = 0
-            print(self.get_info())
+            # print(self.get_info())
 
         """Move the grid by the specified values."""
         def adjust_grid_position(self, x_adjust: int, y_adjust: int):
@@ -347,7 +347,7 @@ class PixelEditor:
     def dump_data(self):
         number = 0
         for grid in self.grids:
-            print(f"Grid {number}: ({grid.get_info()})")
+            # print(f"Grid {number}: ({grid.get_info()})")
             number += 1
     
     """Copy commands to clipboard to generate the current grid layout."""
@@ -434,7 +434,6 @@ def load_documentation():
                     category_command_map[row['category']] = []
                 program_category_map[row['program']][row['category']].append({'command': row['command'], 'name': row['name'], 'description': row['description']})
                 category_command_map[row['category']].append({'command': row['command'], 'name': row['name'], 'description': row['description']})
-                print(program_category_map)
             n += 1 
     
 def display_documentation():
@@ -449,11 +448,11 @@ def display_documentation():
     help_text = []
     n = 1
     if current_category is None:
-#         print(program_category_map or )
+        # print(program_category_map or )
         for categoryDict in program_category_map.values():
-#             print('test')
+            # print('test')
             for category in categoryDict.keys():
-                print(category)
+                # print(category)
                 help_text.append(f"{n}. {category}")
                 n += 1
     elif current_command < 0:
@@ -788,7 +787,7 @@ class Actions:
     def cursor_drag(button: int):
         """Toggle dragging button."""
         pressed = button in ctrl.mouse_buttons_down()
-        print(str(ctrl.mouse_buttons_down()))
+        # print(str(ctrl.mouse_buttons_down()))
         if not pressed:
             for other in ctrl.mouse_buttons_down():
                 if other != button:
@@ -869,12 +868,12 @@ class Actions:
             reset_documentation()
             help_bar.hide()
             ctx.tags.discard('user.pixel_help_mode')
-            print(ctx.tags)
+            # print(ctx.tags)
         else:
             help_bar.show()
             display_documentation()
             ctx.tags.add('user.pixel_help_mode')
-            print(ctx.tags)
+            # print(ctx.tags)
             
     def pixel_help_enable():
         """Enable the help panel."""
@@ -896,8 +895,8 @@ class Actions:
         go_back()
 
             
-pixel_editor = PixelEditor(500, 500)
-pixel_editor.enable()
+pixel_editor = PixelEditor()
+# pixel_editor.enable()
 pixel_editor.add_grid(166, 98, 1706, 632, 8, 8)
 pixel_editor.add_grid(8, 99, 132, 635, 12, 12)
 pixel_editor.add_grid(161, 768, 1725, 230, 23, 23)

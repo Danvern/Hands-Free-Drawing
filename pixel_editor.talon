@@ -137,7 +137,7 @@ help: user.pixel_help_toggle()
 
 # hope file interactive version - COMPLETE
 # integrated command history with status - COMPLETE
-# states shows active grid, help, or if mode is inactive
+# states shows active grid, help, or if mode is inactive - COMPLETE
 # clean start state
 # read me - quick start
 # licensing

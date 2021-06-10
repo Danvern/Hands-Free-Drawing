@@ -338,6 +338,10 @@ class PixelEditor:
         self.active_grid = grid if (grid > 0 and grid < len(self.grids)) else 0
         self.move_cursor_to_cell(*self.grids[self.active_grid].last_cell)
         self.canvas.freeze()
+        
+    """Return the currently active grid."""
+    def get_active_grid(self):
+        return self.active_grid
 
     """Print out the values of contained grids."""
     def dump_data(self):
@@ -598,7 +602,8 @@ speech_system.register('phrase', on_phrase)
 @imgui.open(y=0)
 def status_bar(gui: imgui.GUI):
     global last_command
-    gui.text("Pixel Editor")
+    
+    gui.text(("Pixel Editor" if pixel_editor.enabled else "INACTIVE") + " " + f"(Grid: {pixel_editor.get_active_grid()})")
     gui.text(last_command)
     gui.line()
     if "user.pixel_fast_mode" in ctx.tags:

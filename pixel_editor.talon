@@ -129,7 +129,7 @@ help: user.pixel_help_toggle()
 # relief all keys when pixel editor is turned off - COMPLETE
 # relief all keys when pushed to talk is turned off - COMPLETE
 # unbound mouse movement commands - COMPLETE
-# toll options cursor jump pointo - COMPLETE
+# toll options cursor jump point - COMPLETE
 # color well cursor jump point - COMPLETE
 # jump cursor when the current grid is changed - COMPLETE
 # drag command stopped whatever drag is active instead of allowing too with once - COMPLETE
@@ -138,8 +138,8 @@ help: user.pixel_help_toggle()
 # integrated command history with status - COMPLETE
 # states shows active grid, help, or if mode is inactive - COMPLETE
 # clean start state - COMPLETE
-# read me - quick start
-# licensing
+# read me - quick start - COMPLETE
+# licensing - COMPLETE
 # github
 # aseprite settings file (and instructions on how the color wheel needs to be set up+) - COMPLETE
 

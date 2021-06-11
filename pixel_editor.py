@@ -21,6 +21,7 @@ ctx.lists['user.anchor'] = [
 
 keys_held = []
 
+# over engineered drawing code @Artificer111 - resident art cyborg
 class PixelEditor:
     def __init__(self):
         self.enabled = False

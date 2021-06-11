@@ -132,7 +132,8 @@ pixel editor,setup,pixel (off|offset) <number> {user.directional},,
 pixel editor,setup,pixel (off|offset) <number> {user.directional} <number> {user.directional},,
 pixel editor,setup,pixel dump grid data,,
 pixel editor,setup,pixel copy grid data,,
-pixel editor,setup,pixel load default,,
+pixel editor,setup,pixel load default,,Load saved parameters into the active grid system.
+pixel editor,setup,pixel save default,,Save the current parameters of the active grids.
 pixel editor,navigation,cart <user.letter> <number>,,
 pixel editor,navigation,cart <number> (by|and) <number>,,
 pixel editor,navigation,slide {user.directional},,
@@ -141,8 +142,8 @@ pixel editor,navigation,slide {user.directional} {user.directional},,
 pixel editor,navigation,slide <number> {user.directional} {user.directional},,
 pixel editor,navigation,slide <number> {user.directional} <number> {user.directional},,
 pixel editor,navigation,pixel grid switch <number>,,
-pixel editor,navigation,pixel fast [on],,
-pixel editor,navigation,pixel fast (of|off),,
+pixel editor,navigation,pixel fast [on],Fast Mode,Remove the need to say prefixes for basic movement commands.
+pixel editor,navigation,pixel fast (of|off),Fast Mode,Remove the need to say prefixes for basic movement commands.
 pixel editor,navigation,anchor dump {user.anchor} {user.anchor},,
 pixel editor,mouse,track [left],,
 pixel editor,mouse,track [right],,
@@ -160,3 +161,4 @@ pixel editor,interface,pixel status,,
 pixel editor,interface,pixel grid opacity <number>,,
 pixel editor,interface,pixel mode [on],,
 pixel editor,interface,pixel mode (of|off),,
+pixel editor,interface,help,,Open the interactive help menu.

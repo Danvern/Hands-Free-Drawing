@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<keyboard version="1">
+    <commands />
+    <tools />
+    <quicktools />
+    <actions />
+    <wheel>
+        <key action="Zoom" shortcut="" />
+        <key action="HScroll" shortcut="Shift" />
+        <key action="FgColor" shortcut="Alt" />
+        <key action="BgColor" shortcut="Alt+Shift" />
+        <key action="InkOpacity" shortcut="Ctrl+Space" />
+        <key action="HsvHue" shortcut="Ctrl+Alt+Shift" />
+        <key action="HsvSaturation" shortcut="Ctrl+Alt" />
+        <key action="HsvValue" shortcut="Ctrl+Shift" />
+    </wheel>
+</keyboard>

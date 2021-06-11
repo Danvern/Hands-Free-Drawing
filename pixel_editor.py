@@ -204,6 +204,11 @@ class PixelEditor:
             r = self.bounding_rect
             return f"X: {r.x}, Y: {r.y}, Width: {r.width}, Height: {r.height}, Cell Width: {self.cell_width}, Cell Height: {self.cell_height}"
             
+        """Return a list of structural information."""        
+        def get_info_list(self) -> []:
+            r = self.bounding_rect
+            return[r.x, r.y, r.width, r.height, self.cell_width, self.cell_height]
+            
         """Return a command formatted as a string to generate this grid."""
         def get_preset(self) -> str:
             r = self.bounding_rect
@@ -217,7 +222,7 @@ class PixelEditor:
     """Return clamped grid cell coordinate from potentially out of bounds one."""
     def clamp_cell_coordinate(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
         if identifier is None:
-            iden55tifier = self.active_grid
+            identifier = self.active_grid
         x = min(max(0, x), self.grids[identifier].get_cells_wide())
         y = min(max(0, y), self.grids[identifier].get_cells_tall())
         return x, y
@@ -331,7 +336,8 @@ class PixelEditor:
     """Delete every loaded grid."""
     def clear_grids(self):
         self.grids = []
-        self.canvas.freeze()
+        if self.canvas is not None:
+            self.canvas.freeze()
         
     """Switch to the specified number grid."""
     def set_active_grid(self, grid = 0):
@@ -357,6 +363,24 @@ class PixelEditor:
             command = command + grid.get_preset() + "\n"
         clip.set_text(command)
         
+    """Copy data to csv to generate the current grid layout."""
+    def copy_preset_csv(self):
+        with open('user/artificer_talon/pixel_grids.csv', 'w', newline='') as csvfile:
+            fieldnames = ['x', 'y', 'width', 'height', 'cell_width', 'cell_height']
+            writer = csv.writer(csvfile)
+            # writer.writerow(fieldnames)
+            for grid in self.grids:
+                writer.writerow(grid.get_info_list())
+                
+    """Load data from file to generate a new grid layout."""
+    def load_preset_csv(self):
+        with open('user/artificer_talon/pixel_grids.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            self.clear_grids()
+            for row in reader:
+                data = list(map(int, row))
+                self.add_grid(*data)
+                
     """Set the opacity of the interface to the given value in percent form."""
     def set_opacity(self, opacity: int):
         self.opacity = max(min(opacity, 100), 0) / 100.0
@@ -365,6 +389,7 @@ class PixelEditor:
         x = x * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.x
         y = y * self.cell_size + self.cell_size * 0.5 + self.bounding_rect.y
         return x, y
+        
         
 # Here be dragons, giant documentation section ahead.
 program_category_map = {}
@@ -780,6 +805,14 @@ class Actions:
         """Copy the settings of the loaded grids."""
         pixel_editor.copy_preset()
         
+    def load_grid_preset():
+        """Load the saved grid settings."""
+        pixel_editor.load_preset_csv()
+    
+    def save_grid_preset():
+        """Save the current grid settings."""
+        pixel_editor.copy_preset_csv()
+        
     def editor_set_opacity(percent: int):
         """Set the opacity of the interface to the given value in percent form."""
         pixel_editor.set_opacity(percent)
@@ -897,6 +930,8 @@ class Actions:
             
 pixel_editor = PixelEditor()
 # pixel_editor.enable()
-pixel_editor.add_grid(166, 98, 1706, 632, 8, 8)
-pixel_editor.add_grid(8, 99, 132, 635, 12, 12)
-pixel_editor.add_grid(161, 768, 1725, 230, 23, 23)
+# pixel_editor.add_grid(166, 98, 1706, 632, 8, 8)
+# pixel_editor.add_grid(8, 99, 132, 635, 12, 12)
+# pixel_editor.add_grid(161, 768, 1725, 230, 23, 23)
+# pixel_editor.copy_preset_csv()
+pixel_editor.load_preset_csv()

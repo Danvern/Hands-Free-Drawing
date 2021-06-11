@@ -36,10 +36,9 @@ pixel copy grid data:
     user.copy_grid_data()
 
 pixel load default:
-    user.clear_grids()
-    user.add_grid(166, 98, 1706, 632, 8, 8)
-    user.add_grid(8, 99, 132, 635, 12, 12)
-    user.add_grid(161, 768, 1725, 230, 23, 23)
+    user.load_grid_preset()
+pixel save default:
+    user.save_grid_preset()
 
 # NAVIGATION #
 cart <user.letter> <number>:
@@ -138,11 +137,11 @@ help: user.pixel_help_toggle()
 # hope file interactive version - COMPLETE
 # integrated command history with status - COMPLETE
 # states shows active grid, help, or if mode is inactive - COMPLETE
-# clean start state
+# clean start state - COMPLETE
 # read me - quick start
 # licensing
 # github
-# aseprite settings file (and instructions on how the color wheel needs to be set up+)
+# aseprite settings file (and instructions on how the color wheel needs to be set up+) - COMPLETE
 
 # translation modes - how the cursor moves from point a to point b (movement patterns via vector like data for custom rotations of shapes/brushes)
 # anti-alliasing script / edge patterning 

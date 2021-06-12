@@ -7,4 +7,3 @@ help (clothe|close):
     user.pixel_help_toggle()
 help back:
     user.pixel_help_back()
-testing: "I hear you"

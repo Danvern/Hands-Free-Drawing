@@ -876,10 +876,14 @@ class Actions:
     def start_fast():
         """Initialize fast drawing mode."""
         ctx.tags.add('user.pixel_fast_mode')
+        # This is necessary to make the system recognize that the list has been modified.
+        ctx.tags = ctx.tags
         
     def stop_fast():
         """Stop fast drawing mode."""
         ctx.tags.discard('user.pixel_fast_mode')
+        # This is necessary to make the system recognize that the list has been modified.
+        ctx.tags = ctx.tags
         
     def status_toggle():
         """Toggle viewing the status panel."""
@@ -902,23 +906,30 @@ class Actions:
             reset_documentation()
             help_bar.hide()
             ctx.tags.discard('user.pixel_help_mode')
+            # This is necessary to make the system recognize that the list has been modified.
+            ctx.tags = ctx.tags
             # print(ctx.tags)
         else:
             help_bar.show()
             display_documentation()
             ctx.tags.add('user.pixel_help_mode')
+            # This is necessary to make the system recognize that the list has been modified.
+            ctx.tags = ctx.tags
+            # ctx.tags = ["user.pixel_help_mode"]
             # print(ctx.tags)
             
     def pixel_help_enable():
         """Enable the help panel."""
         help_bar.show()
-        ctx.tags.add('user.pixel_help_mode')
+        ctx.tags = ['user.pixel_help_mode']
+        # ctx.tags.add('user.pixel_help_mode')
     
     def pixel_help_disable():
         """Disable the help panel."""
         reset_documentation()
         help_bar.hide()
-        ctx.tags.discard('user.pixel_help_mode')
+        ctx.tags = []
+        # ctx.tags.discard('user.pixel_help_mode')
         
     def pixel_help_select(number: int):
         """Displayed number topic."""

@@ -4,6 +4,9 @@ os: windows
 and app.exe: powershell.exe
 -
 get:'git '
+get commit all:
+    'git commit -a'
+    key(enter)
 get (status|state):
     'git status'
     key(enter)

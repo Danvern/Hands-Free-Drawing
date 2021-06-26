@@ -97,6 +97,9 @@ pixel grid opacity <number>:
     user.editor_set_opacity(number)
 help: user.pixel_help_toggle()
 
+# I TRACKER # -undocumented
+control mouse: user.mouse_toggle_control_mouse()
+zoom mouse: user.mouse_toggle_zoom_mouse()
 
 # TODO
 

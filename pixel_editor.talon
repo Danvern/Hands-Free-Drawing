@@ -69,22 +69,37 @@ anchor dump {user.anchor} {user.anchor}:
 #    user.jump_to_anchor(-321, -620, 'bottom', 'right')
 
 # MOUSE #
-track [left]:
-    user.cursor_drag(0)
-track [right]:
-    user.cursor_drag(1)
-draw [left] : mouse_click(0)
-draw right : mouse_click(1)
+track : user.cursor_drag("", 0)
+track side : user.cursor_drag("", 1)
+draw:
+    user.release_mouse_buttons()
+    mouse_click(0)
+draw side:
+    user.release_mouse_buttons()
+    mouse_click(1)
+<user.modifiers> track : user.cursor_drag("{modifiers}", 0)
+<user.modifiers> track side : user.cursor_drag("{modifiers}", 1)
+<user.modifiers> draw:
+    user.release_mouse_buttons()
+    key("{modifiers}:down")
+    mouse_click(0)
+    key("{modifiers}:up")
+<user.modifiers> draw side:
+    user.release_mouse_buttons()
+    key("{modifiers}:down")
+    mouse_click(1)
+    key("{modifiers}:up")
 sneak <number> {user.directional}:
     user.move_free(number_1, directional_1)
 sneak <number> {user.directional} <number> {user.directional}:
     user.move_free_2d(number_1, directional_1, number_2, directional_2)
 
 # MODIFIER #
-hold shift: user.toggle_key("shift")
-hold control: user.toggle_key("ctrl")
-hold space: user.toggle_key("space")
-hold (all|alternate): user.toggle_key("alt")
+#hold shift: user.toggle_key("shift")
+#hold control: user.toggle_key("ctrl")
+#hold space: user.toggle_key("space")
+#hold (all|alternate): user.toggle_key("alt")
+hold <user.modifiers> : user.toggle_key("{modifiers}")
 
 # REPEAT #
 (repeat that|twice): core.repeat_command(1)

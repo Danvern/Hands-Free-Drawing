@@ -105,22 +105,34 @@ pan right : key(space:down right space:up)
 pan <number> right:
     user.repeat_key("space-right", number)
 zoom one:
+    user.buffer_keys()
     key(1)
+    user.restore_keys()
     user.editor_set_spacing(1)
 zoom two:
+    user.buffer_keys()
     key(2)
+    user.restore_keys()
     user.editor_set_spacing(2)
 zoom three:
+    user.buffer_keys()
     key(3)
+    user.restore_keys()
     user.editor_set_spacing(4)
 zoom four:
+    user.buffer_keys()
     key(4)
+    user.restore_keys()
     user.editor_set_spacing(8)
 zoom five:
+    user.buffer_keys()
     key(5)
+    user.restore_keys()
     user.editor_set_spacing(16)
 zoom six:
+    user.buffer_keys()
     key(6)
+    user.restore_keys()
     user.editor_set_spacing(32)
 
 # COLOR #

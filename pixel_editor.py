@@ -7,9 +7,14 @@ from talon.skia import Shader, Color, Paint, Rect
 modo = Module()
 modo.list('directional', desc='Directions for expansion.')
 modo.list('anchor', desc='Directions for window anchors.')
+modo.list('modifier_key', desc='Key modifiers.')
 modo.mode('pixel', desc='Enable editor commands.')
-modo.tag('pixel_fast_mode', desc='Enable faster commands for drawing.')
+modo.tag('pixel_fast_mode', desc='En0able faster commands for drawing.')
 modo.tag('pixel_help_mode', desc='Enable commands for navigating the help panel.')
+
+@modo.capture(rule="{user.modifier_key}+")
+def modifiers(m) -> str:
+    return "-".join(m.modifier_key_list)
 
 ctx = Context()
 ctx.lists['user.directional'] = [
@@ -18,8 +23,13 @@ ctx.lists['user.directional'] = [
 ctx.lists['user.anchor'] = [
     'top', 'bottom', 'right', 'left', 'centre', 
 ]
+ctx.lists['user.modifier_key'] = {
+    'shift' : 'shift', 'control' : 'ctrl', 'alt' : 'alt', 'space' : 'space', 
+}
 
 keys_held = []
+keys_held_buffer = []
+keys_held_drag = []
 
 # over engineered drawing code @Artificer111 - resident art cyborg
 class PixelEditor:
@@ -600,7 +610,7 @@ def set_position_from_anchor(x: int, y: int, vertical: str, horizontal: str):
     elif horizontal == 'centre':
         x += window.width / 2
     ctrl.mouse_move(x, y)
-5
+
 """Generate command to move purser relative to anchor and copy it to clipboard."""
 def dump_anchor_command(vertical: str, horizontal: str):
     x, y = get_position_from_anchor(vertical, horizontal)
@@ -658,11 +668,55 @@ def release_all():
     if len(keys_held) > 0:
         for key in keys_held:
             ctrl.key_press(key=key, down=False)
+        keys_held.clear()
     mouse_held = ctrl.mouse_buttons_down()
     if len(mouse_held) > 0:
         for button in mouse_held:
             ctrl.mouse_click(button=button, up=True)
         
+"""Release any keys currently held by the program and buffer them to be restored later."""
+def buffer_keys():
+    global keys_held
+    global keys_held_buffer
+    keys_held_buffer = keys_held
+    if len(keys_held) > 0:
+        for key in keys_held:
+            ctrl.key_press(key=key, down=False)
+        keys_held.clear()
+        
+"""Restore any keys currently held by the key buffer."""
+def restore_keys():
+    global keys_held
+    global keys_held_buffer
+    if len(keys_held_buffer) > 0:
+        for key in keys_held_buffer:
+            ctrl.key_press(key=key, down=True)
+        keys_held = keys_held_buffer
+    keys_held_buffer = []
+
+"""Toggle the specified keys."""
+def toggle_keys(keys: []):
+    global keys_held
+    for key in keys:
+        if key in keys_held:
+            ctrl.key_press(key=key, down=False)
+            keys_held.remove(key)
+        else:
+            ctrl.key_press(key=key, down=True)
+            keys_held.append(key)
+
+"""Toggle the held modifier keys triggered by a drag cursor action."""
+def toggle_drag_keys():
+    global keys_held_drag
+    if len(keys_held_drag) > 0:
+        toggle_keys(keys_held_drag)
+        keys_held_drag = []
+    
+"""Release any active mouse buttons."""
+def release_mouse_buttons():
+    for other in ctrl.mouse_buttons_down():
+        ctrl.mouse_click(button=other, up=True)
+    toggle_drag_keys()
         
 @modo.action_class
 class Actions:
@@ -673,10 +727,7 @@ class Actions:
     def pixel_editor_off():
         """Turn off the pixel editor."""
         pixel_editor.disable()
-        global keys_held
-        for key in keys_held:
-            ctrl.key_press(key=key, down=False)
-        keys_held.clear()
+        release_all()
 
     def pixel_editor_toggle():
         """Turn on the pixel editor, or off if it is already on."""
@@ -818,18 +869,34 @@ class Actions:
         """Set the opacity of the interface to the given value in percent form."""
         pixel_editor.set_opacity(percent)
 
-    def cursor_drag(button: int):
+    def cursor_drag(modifiers: str, button: int):
         """Toggle dragging button."""
+        global keys_held_drag
+        
         pressed = button in ctrl.mouse_buttons_down()
         # print(str(ctrl.mouse_buttons_down()))
         if not pressed:
             for other in ctrl.mouse_buttons_down():
                 if other != button:
                     ctrl.mouse_click(button=other, up=True)
+                    toggle_drag_keys()
                     return
+            if modifiers != '':
+                modifiers = modifiers.split("-")
+                toggle_keys(modifiers)
+                keys_held_drag = modifiers
             ctrl.mouse_click(button=button, down=True)
         else:
             ctrl.mouse_click(button=button, up=True)
+            toggle_drag_keys()
+            
+    def toggle_drag_keys():
+        """Toggle the held modifier keys triggered by a drag cursor action."""
+        toggle_drag_keys()
+            
+    def release_mouse_buttons():
+        """Release any active mouse buttons."""
+        release_mouse_buttons()
         
     def scroll_amount(number: int):
         """Scroll the mouse wheel by the specified amount."""
@@ -859,19 +926,22 @@ class Actions:
             ctrl.key_press(key=base_key, shift=shift, ctrl=ctrlk, alt=alt)
             number -= 1
         
-    def toggle_key(key: str):
+    def toggle_key(key_string: str):
         """Toggle holding down the specified key."""
-        global keys_held
-        if key in keys_held:
-            ctrl.key_press(key=key, down=False)
-            keys_held.remove(key)
-        else:
-            ctrl.key_press(key=key, down=True)
-            keys_held.append(key)
+        keys = key_string.split("-")
+        toggle_keys(keys)
 
     def release_all_keys():
         """Release any keys currently held by the program."""
         release_all()
+        
+    def buffer_keys():
+        """Release any keys currently held by the program and buffer them to be restored later."""
+        buffer_keys()
+    
+    def restore_keys():
+        """Restore any keys currently held by the key buffer."""
+        restore_keys()
         
     def start_fast():
         """Initialize fast drawing mode."""

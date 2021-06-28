@@ -33,6 +33,8 @@ pixel (off|offset) <number> {user.directional} <number> {user.directional}:
 #undocumented
 pixel screen <number>:
     user.editor_active_screen(number)
+pixel verbose:
+    user.toggle_verbose()
     
 pixel dump grid data:
     user.dump_grid_data()

@@ -30,6 +30,7 @@ ctx.lists['user.modifier_key'] = {
 keys_held = []
 keys_held_buffer = []
 keys_held_drag = []
+verbose = True
 
 # over engineered drawing code @Artificer111 - resident art cyborg
 class PixelEditor:
@@ -653,9 +654,13 @@ speech_system.register('phrase', on_phrase)
 @imgui.open(y=0)
 def status_bar(gui: imgui.GUI):
     global last_command
+    global verbose
     
     gui.text(("Pixel Editor" if pixel_editor.enabled else "INACTIVE") + " " + f"(Grid: {pixel_editor.get_active_grid()})")
     gui.text(last_command)
+    if verbose:
+        gui.text(f"Screen: {pixel_editor.active_screen}, Grid: {pixel_editor.get_active_grid()}")
+        gui.text(f"{pixel_editor.grids[pixel_editor.get_active_grid()].get_info()}")
     gui.line()
     if "user.pixel_fast_mode" in ctx.tags:
         gui.text("FAST")
@@ -1028,6 +1033,14 @@ class Actions:
     def pixel_help_back():
         """Go back to to the previous that of topics."""
         go_back()
+        
+    def toggle_verbose():
+        """Toggle displaying extra diagnostic data."""
+        global verbose
+        if verbose:
+            verbose = False
+        else:
+            verbose = True
 
             
 pixel_editor = PixelEditor()

@@ -236,12 +236,15 @@ class PixelEditor:
     def get_bounds_rect(self) -> Rect:
         return self.screen_bounds
         
-    """Return the bounding rectangle of the currently active screen."""
-    def set_current_screen(self, screen_index: int):
+    """Change the screen to display interface elements on."""
+    def set_active_screen(self, screen_index: int):
         if screen_index >= 0 and screen_index < len(ui.screens()):
             self.active_screen = screen_index
             screen = ui.screens()[self.active_screen]
             self.screen_bounds = screen.rect.copy()
+            print(f"Changed to screen {self.active_screen}")
+        else:
+            print(f"Screen {screen_index} invalid. Retaining screen {self.active_screen}")
 
     """Return clamped grid cell coordinate from potentially out of bounds one."""
     def clamp_cell_coordinate(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
@@ -849,6 +852,10 @@ class Actions:
         x, y = interpret_direction(number, direction)
         x2, y2 = interpret_direction(number2, direction2)
         pixel_editor.adjust_grid_offset(x + x2, y + y2)
+
+    def editor_active_screen(index: int):
+        """Change the screen to display interface elements on."""
+        pixel_editor.set_active_screen(index)
 
     def add_grid(x: int, y: int, width: float, height: float, cell_width: int, cell_height: int):
         """Add a new grid with the specified values."""

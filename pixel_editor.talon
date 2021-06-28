@@ -30,6 +30,10 @@ pixel (off|offset) <number> {user.directional}:
 pixel (off|offset) <number> {user.directional} <number> {user.directional}:
     user.editor_adjust_grid_offset(number_1, directional_1, number_2, directional_2)
     
+#undocumented
+pixel screen <number>:
+    user.editor_active_screen(number)
+    
 pixel dump grid data:
     user.dump_grid_data()
 pixel copy grid data:

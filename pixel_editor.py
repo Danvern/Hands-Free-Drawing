@@ -49,7 +49,7 @@ class PixelEditor:
         if self.enabled:
             return
         self.enabled = True
-        screen = ui.screens()[0]
+        screen = ui.screens()[self.active_screen]
         self.canvas = canvas.Canvas(0, 0, screen.width, screen.height)
         self.canvas.register('draw', self.draw_canvas)
         self.canvas.freeze()
@@ -662,7 +662,7 @@ def status_bar(gui: imgui.GUI):
     gui.text(("Pixel Editor" if pixel_editor.enabled else "INACTIVE") + " " + f"(Grid: {pixel_editor.get_active_grid()})")
     gui.text(last_command)
     if verbose:
-        gui.text(f"Screen: {pixel_editor.active_screen}, Grid: {pixel_editor.get_active_grid()}")
+        gui.text(f"Screen: {pixel_editor.active_screen}, Grid: {pixel_editor.get_active_grid()}, Mouse: {ctrl.mouse_pos()}")
         gui.text(f"{pixel_editor.grids[pixel_editor.get_active_grid()].get_info()}")
     gui.line()
     if "user.pixel_fast_mode" in ctx.tags:

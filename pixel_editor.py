@@ -1,4 +1,4 @@
-import math, csv
+import math, csv, os
 from typing import Tuple
 from talon import Context, Module, actions, canvas, cron, ctrl, screen, ui, clip, imgui, speech_system
 from talon.skia import Shader, Color, Paint, Rect                
@@ -393,7 +393,8 @@ class PixelEditor:
         
     """Copy data to csv to generate the current grid layout."""
     def copy_preset_csv(self):
-        with open('user/artificer_talon/pixel_grids.csv', 'w', newline='') as csvfile:
+        dir = os.path.join(os.path.dirname(__file__), 'pixel_grids.csv')
+        with open(dir, 'w', newline='') as csvfile:
             fieldnames = ['x', 'y', 'width', 'height', 'cell_width', 'cell_height']
             writer = csv.writer(csvfile)
             # writer.writerow(fieldnames)
@@ -402,7 +403,8 @@ class PixelEditor:
                 
     """Load data from file to generate a new grid layout."""
     def load_preset_csv(self):
-        with open('user/artificer_talon/pixel_grids.csv', newline='') as csvfile:
+        dir = os.path.join(os.path.dirname(__file__), 'pixel_grids.csv')
+        with open(dir, newline='') as csvfile:
             reader = csv.reader(csvfile)
             self.clear_grids()
             for row in reader:
@@ -473,7 +475,8 @@ def load_documentation():
     global program_category_map
     global category_command_map
     # print(program_category_map.get('air'))
-    with open('user/artificer_talon/pixel_documentation.csv', newline='') as csvfile:
+    dir = os.path.join(os.path.dirname(__file__), 'pixel_documentation.csv')
+    with open(dir, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         n = 0
         for row in reader:

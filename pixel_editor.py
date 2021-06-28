@@ -36,11 +36,12 @@ class PixelEditor:
     def __init__(self):
         self.enabled = False
         self.canvas = None
-        screen = ui.screens()[0]
-        self.max_rect = screen.rect.copy()
         self.grids = []
         # self.grids = [self.FlexibleGrid(width, height, self.max_rect)]
         self.active_grid = 0
+        self.active_screen = 0
+        screen = ui.screens()[self.active_screen]
+        self.screen_bounds = screen.rect.copy()
         self.grid_opacity = 0.05
 
     def enable(self):
@@ -67,14 +68,15 @@ class PixelEditor:
             self.enable()
             
     class FlexibleGrid:
-        def __init__(self, x: int, y: int, width: float, height: float, maximum_bounds: Rect, /, cell_width = 10, cell_height = 10):
+        def __init__(self, x: int, y: int, width: float, height: float, parent_editor, /, cell_width = 10, cell_height = 10):
             self.bounding_rect =  Rect(x, y, width, height)
             self.cell_width = cell_width
             self.cell_height = cell_height
-            self.max_rect = maximum_bounds
-            screen = ui.screens()[0]
-            if self.max_rect is None:
-                self.max_rect = screen.rect.copy()
+            #self.max_rect = maximum_bounds
+            #screen = ui.screens()[0]
+            self.max_rect = lambda: parent_editor.get_bounds_rect()
+            #if self.max_rect is None:
+                #self.max_rect = screen.rect.copy()
             self.last_cell = (0, 0)
             self.offset_x = 0
             self.offset_y = 0
@@ -230,6 +232,17 @@ class PixelEditor:
         if len(self.grids) > 0:
             self.grids[self.active_grid].draw_canvas(canvas, self.grid_opacity)
 
+    """Return the bounding rectangle of the currently active screen."""
+    def get_bounds_rect(self) -> Rect:
+        return self.screen_bounds
+        
+    """Return the bounding rectangle of the currently active screen."""
+    def set_current_screen(self, screen_index: int):
+        if screen_index >= 0 and screen_index < len(ui.screens()):
+            self.active_screen = screen_index
+            screen = ui.screens()[self.active_screen]
+            self.screen_bounds = screen.rect.copy()
+
     """Return clamped grid cell coordinate from potentially out of bounds one."""
     def clamp_cell_coordinate(self, x: int, y: int, identifier = None) -> Tuple[int, int]:
         if identifier is None:
@@ -342,7 +355,7 @@ class PixelEditor:
         
     """Add a new grid with the specified attributes."""
     def add_grid(self, x: int, y: int, width: float, height: float, /, cell_width = 10, cell_height = 10):
-        self.grids.append(self.FlexibleGrid(x, y, width, height, self.max_rect, cell_width, cell_height))
+        self.grids.append(self.FlexibleGrid(x, y, width, height, self, cell_width, cell_height))
 
     """Delete every loaded grid."""
     def clear_grids(self):

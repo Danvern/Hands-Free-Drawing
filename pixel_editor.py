@@ -45,15 +45,25 @@ class PixelEditor:
         self.screen_bounds = screen.rect.copy()
         self.grid_opacity = 0.05
 
+    """Reset drawing canvas and movement grid boundaries to be accurate to current screen."""
+    def reset_bounds(self):
+        screen = ui.screens()[self.active_screen]
+        self.screen_bounds = screen.rect.copy()
+        print(f"Screen Boundaries: {self.screen_bounds}")
+        if self.canvas is not None:
+            self.canvas.close()
+        screen = ui.screens()[self.active_screen]
+        self.canvas = canvas.Canvas(screen.x, screen.y, screen.width, screen.height)
+        print(f"Canvas Boundaries: {screen}")
+        self.canvas.register('draw', self.draw_canvas)
+        self.canvas.freeze()
+
     def enable(self):
         if self.enabled:
             return
         self.enabled = True
-        screen = ui.screens()[self.active_screen]
-        self.canvas = canvas.Canvas(0, 0, screen.width, screen.height)
-        self.canvas.register('draw', self.draw_canvas)
-        self.canvas.freeze()
-
+        self.reset_bounds()
+        
     def disable(self):
         if not self.enabled:
             return
@@ -186,15 +196,15 @@ class PixelEditor:
         """Return the cell coordinates of the specified screen position."""
         def screen_to_cell(self, x: int, y: int) -> Tuple[int, int]:
             # subtract grid position and divide by cell dimension ignoring remainder
-            x = math.floor((x - self.bounding_rect.x - self.offset_x) / self.cell_width)
-            y = math.floor((y - self.bounding_rect.y - self.offset_y) / self.cell_height)
+            x = math.floor((x - self.max_rect().x - self.bounding_rect.x - self.offset_x) / self.cell_width)
+            y = math.floor((y - self.max_rect().y - self.bounding_rect.y - self.offset_y) / self.cell_height)
             return x, y
         
         """Return the screen coordinates of the specified cell."""
         def cell_to_screen(self, x: int, y: int) -> Tuple[int, int]:
             # multiply by cell size and add half as an offset
-            x = x * self.cell_width + self.cell_width * 0.5 + self.bounding_rect.x + self.offset_x
-            y = y * self.cell_height + self.cell_height * 0.5 + self.bounding_rect.y + self.offset_y
+            x = x * self.cell_width + self.cell_width * 0.5 + self.bounding_rect.x + self.offset_x + self.max_rect().x
+            y = y * self.cell_height + self.cell_height * 0.5 + self.bounding_rect.y + self.offset_y + self.max_rect().y
             return x, y
 
         """Draw the graphical representation of the grid."""        
@@ -202,7 +212,10 @@ class PixelEditor:
             paint = canvas.paint
             paint.color = Color(0 + 0 + (35 * 256) + 255 * opacity)
             # paint.color = '000055ff'
-            rect = self.bounding_rect
+            rect = self.bounding_rect.copy()
+            container = self.max_rect
+            rect.x = rect.x + container().x
+            rect.y = rect.y + container().y
 
             i_range = lambda start, stop, step: range(int(start), int(stop), int(step))
             paint.antialias = False
@@ -241,9 +254,10 @@ class PixelEditor:
     def set_active_screen(self, screen_index: int):
         if screen_index >= 0 and screen_index < len(ui.screens()):
             self.active_screen = screen_index
-            screen = ui.screens()[self.active_screen]
-            self.screen_bounds = screen.rect.copy()
+            # screen = ui.screens()[self.active_screen]
+            # self.screen_bounds = screen.rect.copy()
             print(f"Changed to screen {self.active_screen}")
+            self.reset_bounds()
         else:
             print(f"Screen {screen_index} invalid. Retaining screen {self.active_screen}")
 

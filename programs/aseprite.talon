@@ -50,6 +50,9 @@ move <number> {user.directional} <number> {user.directional}:
 move <number> {user.directional} {user.directional}:
     user.repeat_key(directional_1, number)
     user.repeat_key(directional_2, number)
+move {user.directional} {user.directional}:
+    key(space:down directional_1 space:up)
+    key(space:down directional_2 space:up)
 flip horizontal : key(shift-h)
 flip vertical : key(shift-v)
     
@@ -88,18 +91,17 @@ crop : key(c)
 
 # NAVIGATION #
 canvas grid : user.change_grid(0)
-pan up : key(space:down up space:up)
-pan <number> up:
-    user.repeat_key("space-up", number)
-pan down : key(space:down down space:up)
-pan <number> down:
-    user.repeat_key("space-down", number)
-pan left : key(space:down left space:up)
-pan <number> left:
-    user.repeat_key("space-left", number)
-pan right : key(space:down right space:up)
-pan <number> right:
-    user.repeat_key("space-right", number)
+pan {user.directional} : key(space:down directional space:up)
+pan <number> {user.directional} : user.repeat_key("space-" + directional, number)
+pan <number> {user.directional} <number> {user.directional}:
+    user.repeat_key("space-" + directional_1, number_1)
+    user.repeat_key("space-" + directional_2, number_2)
+pan <number> {user.directional} {user.directional}:
+    user.repeat_key("space-" + directional_1, number)
+    user.repeat_key("space-" + directional_2, number)
+pan {user.directional} {user.directional}:
+    key(space:down directional_1 space:up)
+    key(space:down directional_2 space:up)
 zoom one:
     user.buffer_keys()
     key(1)

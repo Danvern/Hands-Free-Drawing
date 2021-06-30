@@ -42,18 +42,14 @@ delete: key(delete)
 fill selection: key(f)
 
 # TRANSFORMATION #
-move up : key(up)
-move <number> up: 
-    user.repeat_key("up", number)
-move down : key(down)
-move <number> down:
-    user.repeat_key("down", number)
-move left : key(left)
-move <number> left:
-    user.repeat_key("left", number)
-move right : key(right)
-move <number> right:
-    user.repeat_key("right", number)
+move {user.directional} : key(directional)
+move <number> {user.directional} : user.repeat_key(directional, number)
+move <number> {user.directional} <number> {user.directional}:
+    user.repeat_key(directional_1, number_1)
+    user.repeat_key(directional_2, number_2)
+move <number> {user.directional} {user.directional}:
+    user.repeat_key(directional_1, number)
+    user.repeat_key(directional_2, number)
 flip horizontal : key(shift-h)
 flip vertical : key(shift-v)
     

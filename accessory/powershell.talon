@@ -2,6 +2,10 @@ os: windows
 and app.name: powershell.exe
 os: windows
 and app.exe: powershell.exe
+os: windows
+and app.name: Windows PowerShell
+os: windows
+and app.exe: PowerShell.exe
 -
 get:'git '
 get commit all:

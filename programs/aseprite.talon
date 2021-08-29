@@ -9,8 +9,8 @@ and app.exe: Aseprite.exe
 mode: user.pixel
 -
 settings():
-    key_wait = 20.0
-    key_hold = 20.0
+    key_wait = 32.0
+    key_hold = 32.0
 
 # FILE #
 file save : key(ctrl-s)
@@ -67,7 +67,7 @@ select (wand|on|one) : key(w)
 spray  : key(shift-b)
 (erase|eraser) : key(e)
 replace : key(shift-e)
-(eyedrop|eyedropper) [left]:
+(-c|eyedrop|eyedropper) [left]:
     key(alt:down)
     mouse_click(0)
     key(alt:up)
@@ -134,6 +134,7 @@ zoom six:
     user.editor_set_spacing(32)
 
 # COLOR #
+(swap|switch) color : key(x)
 color (swap|switch) : key(x)
 color (next|right) : key(])
 color (previous|left) : key([)
@@ -181,7 +182,9 @@ onion [skin] : key(f3)
 # ANIMATION #
 animation play : key(enter)
 frame (next|right) : key(right)
+frame <number> (next|right) : user.repeat_key(right, number)
 frame (previous|left) : key(left)
+frame <number> (previous|left) : user.repeat_key(left, number)
 frame first : key(home)
 frame last : key(and|end)
 frame properties : key(p)
@@ -191,11 +194,16 @@ frame duplicate : key(alt-d)
 frame duplicate link : key(alt-m)
 frame delete : key(alt-c)
 frame reverse : key(alt-i)
-frame go : key(alt-g)
+frame go <number>:
+    key(alt-g)
+    key(5)
+    key(enter)
 
 # LAYERS #
 layer (next|up) : key(up)
+layer <number> (next|up) : user.repeat_key(up, number)
 layer (previous|down) : key(down)
+layer <number> (previous|down) : user.repeat_key(down, number)
 layer new : key(shift-n)
 layer group : key(alt-shift-n)
 layer copy : key(ctrl-j)

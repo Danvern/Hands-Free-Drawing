@@ -140,38 +140,37 @@ color (next|right) : key(])
 color (previous|left) : key([)
 color grid : user.change_grid(1)
 color wheel : user.jump_to_anchor(79, -189, 'bottom', 'left')
-color (you|hue) <number> up:
+color (you|hue) up:
     key(ctrl-alt-shift:down)
-    #mouse_scroll(number, 0)
-    user.scroll_amount(number)
+    user.scroll_amount(10)
     key(ctrl-alt-shift:up)
-color (you|hue) <number> down:
+color (you|hue) down:
     key(ctrl-alt-shift:down)
-    user.scroll_amount(0 - number)
+    user.scroll_amount(-10)
     key(ctrl-alt-shift:up)
-color (saturation|that|sat) <number> up:
+color (saturation|that|sat) up:
     key(ctrl-alt:down)
-    user.scroll_amount(number)
+    user.scroll_amount(10)
     key(ctrl-alt:up)
-color (saturation|that|sat) <number> down:
+color (saturation|that|sat) down:
     key(ctrl-alt:down)
-    user.scroll_amount(0 - number)
+    user.scroll_amount(-10)
     key(ctrl-alt:up)
-color (value|light|lightness) <number> up:
+color (value|light|lightness) up:
     key(ctrl-shift:down)
-    user.scroll_amount(number)
+    user.scroll_amount(10)
     key(ctrl-shift:up)
-color (value|light|lightness) <number> down:
+color (value|light|lightness) down:
     key(ctrl-shift:down)
-    user.scroll_amount(0 - number)
+    user.scroll_amount(-10)
     key(ctrl-shift:up)
-color (opacity|fade) <number> up:
+color (opacity|fade) up:
     key(ctrl-space:down)
-    user.scroll_amount(number)
+    user.scroll_amount(10)
     key(ctrl-space:up)
-color (opacity|fade) <number> down:
+color (opacity|fade) down:
     key(ctrl-space:down)
-    user.scroll_amount(0 - number)
+    user.scroll_amount(-10)
     key(ctrl-space:up)
     
 # TIMELINE #
@@ -196,7 +195,7 @@ frame delete : key(alt-c)
 frame reverse : key(alt-i)
 frame go <number>:
     key(alt-g)
-    user.type_number(number)
+    user.type_number(numberb)
     key(enter)
 
 # LAYERS #

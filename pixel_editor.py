@@ -985,6 +985,11 @@ class Actions:
         """Restore any keys currently held by the key buffer."""
         restore_keys()
         
+    def type_number(number: int):
+        """Types out the given number."""
+        for digit in str(number):
+            ctrl.key_press(key=digit)
+        
     def start_fast():
         """Initialize fast drawing mode."""
         ctx.tags.add('user.pixel_fast_mode')

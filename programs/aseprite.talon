@@ -196,7 +196,7 @@ frame delete : key(alt-c)
 frame reverse : key(alt-i)
 frame go <number>:
     key(alt-g)
-    key(5)
+    user.type_number(number)
     key(enter)
 
 # LAYERS #

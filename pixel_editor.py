@@ -890,6 +890,10 @@ class Actions:
     def change_grid(number: int):
         """Change to the specified grid number."""
         pixel_editor.set_active_grid(number)
+
+    def refresh_grid():
+        """Return to the last grid position."""
+        pixel_editor.set_active_grid(pixel_editor.get_active_grid())
         
     def dump_grid_data():
         """Print out the values of contained grids."""

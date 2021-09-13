@@ -143,9 +143,11 @@ color wheel : user.jump_to_anchor(79, -189, 'bottom', 'left')
 color foreground add:
     user.jump_to_anchor(155, -61, 'bottom', 'left')
     mouse_click(0)
+    user.move_on_grid(0, 'left')
 color background add:
     user.jump_to_anchor(149, -34, 'bottom', 'left')
     mouse_click(0)
+    user.move_on_grid(0, 'left')
 color (you|hue) up:
     key(ctrl-alt-shift:down)
     user.scroll_amount(10)
